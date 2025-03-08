@@ -2,7 +2,5 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
-  return (
-    <div>this is a main page</div>
-  );
+  return <div>this is a main page</div>;
 }
