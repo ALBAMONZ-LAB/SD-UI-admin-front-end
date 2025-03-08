@@ -1,3 +1,10 @@
+import { InputForms, Preview } from "@/components";
+
 export default function Event() {
-  return <div>event</div>;
+  return (
+    <>
+      <InputForms />
+      <Preview />
+    </>
+  );
 }
