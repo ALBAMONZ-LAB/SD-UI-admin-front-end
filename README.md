@@ -42,12 +42,12 @@ npm run dev
 
 > 브라우저에서 [http://localhost:3000](http://localhost:3000) 에 접속하세요.
 
-## 백엔드 연결 (추가 예정)
+## 백엔드 연결 (ec2 배포 해두었어요!)
 
 이 프로젝트는 `SD_UI_PoC` 백엔드를 사용합니다. `.env.local` 파일에서 API 기본 URL을 설정하세요:
 
 ```sh
-NEXT_PUBLIC_API_BASE_URL=https://github.com/ALBAMONZ-LAB/SD_UI_PoC
+NEXT_PUBLIC_API_BASE_URL=http://44.194.216.102:3000
 ```
 
 ## CSS in CSS vs. CSS in JS (미정)
