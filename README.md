@@ -13,6 +13,8 @@ GitHub에 코드 푸시 시 EC2에서 자동으로 빌드 및 배포.
 
 ### 배포 프로세스
 
+**develop branch 에서 feature 따서 작업.**(그날 작업 완료 후 main으로 merge 하면 자동 배포)
+
 1. **GitHub에 코드 푸시** → Jenkins Webhook 트리거
 2. **Jenkins에서 최신 코드 Pull**
 3. **Docker 이미지 빌드 (`sd-ui-admin-front-images:latest`)**
