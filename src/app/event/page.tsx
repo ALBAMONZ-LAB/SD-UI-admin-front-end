@@ -1,4 +1,4 @@
-import { InputForms, Preview } from "../components";
+import { InputForms, Preview } from '../components';
 
 export default function Event() {
   return (
