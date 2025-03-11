@@ -1,7 +1,7 @@
 import { gql, useQuery } from '@apollo/client';
 
 export const GET_EVENT_DETAIL_PAGE = gql`
-  query GetEventPageComponents($eventId: Int!) {
+  query GetEventPageComponents($eventId: Float!) {
     getEventPageComponents(eventId: $eventId) {
       id
       eventId
@@ -10,7 +10,6 @@ export const GET_EVENT_DETAIL_PAGE = gql`
     }
   }
 `;
-
 export function useEventPages(eventId: number) {
   return useQuery(GET_EVENT_DETAIL_PAGE, {
     variables: { eventId },

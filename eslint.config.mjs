@@ -25,7 +25,6 @@ const eslintConfig = [
       // React 관련 경고 제거 (Next.js에서는 자동으로 React import 처리)
       'react/jsx-uses-react': 'off',
       'react/react-in-jsx-scope': 'off',
-
       // TypeScript 관련 규칙 추가
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
