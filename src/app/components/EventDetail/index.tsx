@@ -11,7 +11,7 @@ export default function EventList() {
   return (
     <div>
       <h2>Event List</h2>
-      <pre>{JSON.stringify(event, null, 2)}</pre>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }

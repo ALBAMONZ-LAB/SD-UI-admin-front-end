@@ -74,7 +74,7 @@ npm run dev
 이 프로젝트는 `SD_UI_PoC` 백엔드를 사용합니다. `.env.local` 파일에서 API 기본 URL을 설정하세요:
 
 ```sh
-NEXT_PUBLIC_API_BASE_URL=http://44.194.216.102:3000
+NEXT_PUBLIC_API_BASE_URL=api_base_url
 ```
 
 ## CSS in CSS vs. CSS in JS (미정)
