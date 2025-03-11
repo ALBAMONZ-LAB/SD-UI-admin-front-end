@@ -19,7 +19,7 @@ GitHub에 코드 푸시 시 EC2에서 자동으로 빌드 및 배포.
 2. **Jenkins에서 최신 코드 Pull**
 3. **Docker 이미지 빌드 (`sd-ui-admin-front-images:latest`)**
 4. **기존 컨테이너 중지 후 새 컨테이너 실행 (`sd-ui-admin-front-container`)**
-5. **EC2에서 자동 배포 완료** 
+5. **EC2에서 자동 배포 완료**
 
 ---
 
