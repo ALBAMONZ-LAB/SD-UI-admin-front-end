@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import QueryProvider from './providers/QueryProvider';
+import GraphQLProvider from '@sd-ui-admin/app/providers/ApolloProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en">
       <body>
         <QueryProvider>
-          <main>{children}</main>
+          <GraphQLProvider>
+            <main>{children}</main>
+          </GraphQLProvider>
         </QueryProvider>
       </body>
     </html>
