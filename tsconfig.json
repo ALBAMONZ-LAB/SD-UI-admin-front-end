@@ -2,15 +2,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "paths": {
-      "@sd-ui-admin/*": [
-        "src/*"
-      ]
+      "@sd-ui-admin/*": ["src/*"],
+      "@sd-ui-components": ["src/components/index"],
+      "@sd-ui-api/*": ["src/api"]
     },
     "allowJs": true,
     "skipLibCheck": true,
@@ -29,14 +25,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src"],
+  "exclude": ["node_modules"]
 }
