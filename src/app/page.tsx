@@ -8,6 +8,9 @@ export default function Home() {
         <li>
           <Link href={'/event'}>going to the event page</Link>
         </li>
+        <li>
+          <Link href={'/event-history'}>going to the event history page</Link>
+        </li>
       </ul>
     </div>
   );
