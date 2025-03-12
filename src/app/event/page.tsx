@@ -1,11 +1,10 @@
-import { InputForms, Preview } from '../components';
-import EventList from "@sd-ui-admin/app/components/EventDetail";
+import { EventDetail, InputForms, Preview } from '@sd-ui-components';
 
 export default function Event() {
   return (
     <>
       <InputForms />
-      <EventList />
+      <EventDetail />
       <Preview />
     </>
   );

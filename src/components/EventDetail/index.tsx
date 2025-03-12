@@ -2,7 +2,7 @@
 
 import { useEventPages } from '@sd-ui-admin/api/event/event.queries';
 
-export default function EventList() {
+export function EventDetail() {
   const { data, loading: isLoading, error } = useEventPages(1);
 
   if (isLoading) return <p>Loading...</p>;
@@ -10,8 +10,10 @@ export default function EventList() {
 
   return (
     <div>
-      <h2>Event List</h2>
+      <h2>EventDetail</h2>
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
+
+export default EventDetail;
