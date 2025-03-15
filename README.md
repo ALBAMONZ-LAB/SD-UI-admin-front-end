@@ -13,21 +13,26 @@ GitHub에 코드 푸시 시 EC2에서 자동으로 빌드 및 배포.
 
 ### 배포 프로세스
 
-**develop branch 에서 feature 따서 작업.**(그날 작업 완료 후 main으로 merge 하면 자동 배포)
+**브랜치 전략**
+
+1. `main` → 안정적인 배포 브랜치
+2. `develop` → 개발 브랜치 (테스트 및 QA)
+3. `feature/*` → 기능 단위 개발 브랜치
+
+**작업 순서**
+
+1. `develop`에서 `feature/기능명` 브랜치 생성
+2. 기능 개발 후 `develop` 브랜치로 병합 (PR 요청 후 코드 리뷰 진행)
+3. 기능 테스트 완료 후 `main`으로 배포 진행
+
+### **CI/CD**
 
 1. **GitHub에 코드 푸시** → Jenkins Webhook 트리거
 2. **Jenkins에서 최신 코드 Pull**
 3. **Docker 이미지 빌드 (`sd-ui-admin-front-images:latest`)**
 4. **기존 컨테이너 중지 후 새 컨테이너 실행 (`sd-ui-admin-front-container`)**
 5. **EC2에서 자동 배포 완료**
-
----
-
-### **자동 배포 확인 방법**
-
-1. **GitHub에 새로운 코드 푸시**
-2. Jenkins에서 빌드 자동 실행 확인
-3. 브라우저에서 http://3.36.185.81/ 접속하여 최신 버전 반영 확인
+6. **브라우저에서 http://3.36.185.81/ 접속하여 최신 버전 반영 확인**
 
 ## 기능
 
@@ -47,7 +52,7 @@ GitHub에 코드 푸시 시 EC2에서 자동으로 빌드 및 배포.
  ┣ 📂 api/                     # API 호출 함수
  ┣ 📂 types/                   # 타입 정의
  ┣ 📂 utils/                   # 공통 유틸 함수
- ┣ 📂 styles/                  # 전역 스타일 (추가 예정)
+ ┣ 📂 styles/                  # 스타일 파일 (Vanilla Extract)
  ┣ next.config.js              # Next.js 설정
  ┣ tsconfig.json               # TypeScript 설정
  ┗ package.json                # 패키지 목록
@@ -69,7 +74,7 @@ npm run dev
 
 > 브라우저에서 [http://localhost:3000](http://localhost:3000) 에 접속하세요.
 
-## 백엔드 연결 (ec2 배포 해두었어요!)
+## 백엔드 연결 (EC2 배포 완료)
 
 이 프로젝트는 `SD_UI_PoC` 백엔드를 사용합니다. `.env.local` 파일에서 API 기본 URL을 설정하세요:
 
@@ -77,41 +82,34 @@ npm run dev
 NEXT_PUBLIC_API_BASE_URL=api_base_url
 ```
 
-## CSS in CSS vs. CSS in JS (미정)
+## 스타일링 방식 (Vanilla Extract 적용)
 
-### 1. CSS in CSS
+### **Vanilla Extract 적용 이유**
 
-- **SASS(전처리기)**: 기존 CSS 문법을 확장하여 변수, 중첩, 믹스인 지원
-- **Tailwind CSS**: 유틸리티 기반 스타일링 방식
-- 정적인 CSS로 렌더링되어 성능이 안정적임
+- **정적 스타일 지원**: 빌드 타임에 스타일이 생성되어 성능 최적화
+- **타입 안전성**: TypeScript와 완벽한 호환
+- **모듈화**: CSS 클래스를 TypeScript 코드에서 안전하게 관리 가능
+- **테마 지원**: 글로벌 테마 변수 설정 가능
+- **CSS in CSS와 유사한 빌드 적용 방식**: 다른 CSS-in-JS 라이브러리는 런타임에서 스타일을 생성하는 반면, Vanilla Extract는 빌드 시점에 스타일을 생성하여 성능 이점이 있음
 
-#### 장단점
+### **Vanilla Extract 사용 예시**
 
-- 장점: 기존 CSS 방식 유지, 학습 부담 적음, 성능 안정적
-- 단점: 전역 네임스페이스 충돌 가능, Tailwind는 클래스 네이밍 복잡할 수 있음
+```tsx
+import { style } from '@vanilla-extract/css';
 
----
+export const button = style({
+  backgroundColor: 'blue',
+  color: 'white',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  cursor: 'pointer',
+});
+```
 
-### 2. CSS in JS
+```tsx
+import { button } from './styles.css';
 
-- **Styled Components, Emotion, Vanilla Extract** 등으로 JavaScript에서 직접 스타일 정의
-- 동적 스타일링과 컴포넌트 단위 스타일 적용 가능
-
-#### 장단점
-
-- 장점: 동적 테마 적용 가능, 전역 스타일 충돌 방지
-- 단점: JS 번들 크기 증가 가능, SSR 시 성능 저하 우려
-
----
-
-### 3. 성능 비교
-
-| 방식       | 초기 로딩 속도  | 스타일 적용 방식     | 유지보수               |
-| ---------- | --------------- | -------------------- | ---------------------- |
-| CSS in CSS | 빠름            | 정적인 CSS 파일      | 익숙하고 쉬움          |
-| CSS in JS  | 상대적으로 느림 | JS 실행 시 동적 적용 | 컴포넌트 단위 스타일링 |
-
-#### 결론
-
-- **CSS in CSS(SASS, Tailwind CSS)**: 정적인 스타일링에 적합
-- **CSS in JS(Styled Components 등)**: 동적 스타일 변경이 많은 경우 유리
+export default function MyComponent() {
+  return <button className={button}>Click Me</button>;
+}
+```
