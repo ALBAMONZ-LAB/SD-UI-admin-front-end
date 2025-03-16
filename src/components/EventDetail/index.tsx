@@ -2,8 +2,12 @@
 
 import { useEventPages } from '@sd-ui-admin/api/event/event.queries';
 
-export function EventDetail() {
-  const { data, loading: isLoading, error } = useEventPages(1);
+export interface EventDetailProps {
+  id: number;
+}
+
+export function EventDetail({ id }: EventDetailProps) {
+  const { data, loading: isLoading, error } = useEventPages(id);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
