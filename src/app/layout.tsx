@@ -1,6 +1,7 @@
 import GraphQLProvider from '@sd-ui-admin/app/providers/ApolloProvider';
 import { Sidebar } from '@sd-ui-admin/components';
 import '@sd-ui-admin/styles/global.css';
+import * as styles from '@sd-ui-admin/styles/globalLayout.css';
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import QueryProvider from './providers/QueryProvider';
@@ -16,9 +17,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <body>
         <QueryProvider>
           <GraphQLProvider>
-            <div style={{ display: 'flex' }}>
+            <div className={styles.layout}>
               <Sidebar />
-              <main style={{ marginLeft: '250px', padding: '40px', flex: 1 }}>{children}</main>
+              <main className={styles.main}>{children}</main>
             </div>
           </GraphQLProvider>
         </QueryProvider>

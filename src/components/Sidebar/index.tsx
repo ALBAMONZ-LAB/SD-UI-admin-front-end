@@ -22,13 +22,13 @@ export function Sidebar() {
         <nav>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
-              <Link href="/event-history" className={styles.navLink}>
-                이벤트 이력
+              <Link href="/event" className={styles.navLink}>
+                이벤트 목록
               </Link>
             </li>
             <li className={styles.navItem}>
-              <Link href="/event-detail" className={styles.navLink}>
-                이벤트 등록
+              <Link href="/event-history" className={styles.navLink}>
+                이벤트 이력
               </Link>
             </li>
           </ul>
