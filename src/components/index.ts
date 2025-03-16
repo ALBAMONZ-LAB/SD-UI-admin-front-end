@@ -1,3 +1,4 @@
+export * from './EventDetail/index';
 export * from './InputForms';
 export * from './Preview';
-export * from './EventDetail/index';
+export * from './Sidebar/index';
