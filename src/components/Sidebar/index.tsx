@@ -17,7 +17,7 @@ export function Sidebar() {
       {/* 사이드바 메뉴 */}
       <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
         <Link href="/" className={styles.sidebarHeader}>
-          관리자 메뉴
+          SD-UI Admin
         </Link>
         <nav>
           <ul className={styles.navList}>
