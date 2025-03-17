@@ -19,7 +19,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           <GraphQLProvider>
             <div className={styles.layout}>
               <Sidebar />
-              <main className={styles.main}>{children}</main>
+              <div className={styles.contents}>
+                <header className={styles.header}>
+                  <div className={styles.userMenu}>👤 누군가님</div>
+                </header>
+                <main className={styles.main}>{children}</main>
+              </div>
             </div>
           </GraphQLProvider>
         </QueryProvider>
