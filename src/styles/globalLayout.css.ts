@@ -14,7 +14,6 @@ export const contents = style({
 
 export const main = style({
   flexGrow: 1,
-  padding: '40px',
   overflowY: 'auto',
 });
 
