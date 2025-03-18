@@ -8,11 +8,12 @@ interface TextInputFormProps extends InputHTMLAttributes<HTMLInputElement> {
   register?: UseFormRegisterReturn;
 }
 
-export function TextInputForm({ label, name, register, ...inputProps }: TextInputFormProps) {
+export function TextInputForm({ label, name, register, ...rest }: TextInputFormProps) {
+  const {value, ...inputProps} = rest;
   return (
     <div className={styles.inputGroup}>
       <label>{label}</label>
-      <input {...register} {...inputProps} />
+      <input {...register} value={value || ''}{...inputProps} />
     </div>
   );
 }

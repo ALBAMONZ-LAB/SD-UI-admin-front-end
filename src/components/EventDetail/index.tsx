@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useEventPages } from '@sd-ui-admin/api/event/event.queries';
+import { useGetEventPage } from "@sd-ui-admin/api/event/event.queries";
 import * as styles from './index.css';
-import { section } from "./index.css";
 import TextInputForm from "@sd-ui-admin/components/TextInputForm";
 
 export interface EventDetailProps {
@@ -16,23 +15,21 @@ interface Section {
 }
 
 export function EventDetail({ id }: EventDetailProps) {
-  const { data, loading: isLoading, error } = useEventPages(id);
+  const { data, loading: isLoading, error } = useGetEventPage(id);
   const [sections, setSections] = useState<Section[]>([]);
   const [nextId, setNextId] = useState(1);
   const [selectedSection, setSelectedSection] = useState('button');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  // Event data fetching
+
   useEffect(() => {
     if (data) {
-      setTitle(data.getEventPageComponents.pageJson.title);
-      setDescription(data.getEventPageComponents.pageJson.description);
+      setTitle(data.pageJson.title);
+      setDescription(data.pageJson.description);
     }
   }, [data]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
   const addSection = () => {
     setSections([...sections, { id: nextId, type: selectedSection }]);
@@ -41,14 +38,15 @@ export function EventDetail({ id }: EventDetailProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Submit logic for updating the event data
     console.log('Updated Event:', {
-      eventId: data?.getEventPageComponents.eventId,
+      eventId: data?.eventId,
       title,
       description,
       sections,
     });
   };
+  if (isLoading || !data) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className={styles.container}>
@@ -64,12 +62,12 @@ export function EventDetail({ id }: EventDetailProps) {
         </div>
         <form onSubmit={handleSubmit}>
           <div className={styles.readOnlyFields}>
-            <p>Event ID: {data?.getEventPageComponents.eventId}</p>
-            <p>Created At: {new Date(data?.getEventPageComponents.createdAt).toLocaleString()}</p>
-            <p>Description: {description}</p>
+            <p>Event ID: {data?.eventId}</p>
+            <p>Created At: {new Date(data.createdAt).toLocaleString()}</p>
+            <p>Description: {data?.pageJson.description}</p>
           </div>
 
-          <TextInputForm label="Title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <TextInputForm label="Title" name="title" value={data?.pageJson.title} onChange={(e) => setTitle(e.target.value)} />
           <div className={styles.saveButtonContainer}>
             <button type="submit">Save Changes</button>
           </div>
