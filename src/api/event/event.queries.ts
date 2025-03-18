@@ -11,7 +11,7 @@ export const GET_EVENT_DETAIL_PAGE = gql`
   }
 `;
 export function useEventPages(eventId: number) {
-  return useQuery(GET_EVENT_DETAIL_PAGE, {
+  return useQuery<any>(GET_EVENT_DETAIL_PAGE, {
     variables: { eventId },
     skip: !eventId,
   });
