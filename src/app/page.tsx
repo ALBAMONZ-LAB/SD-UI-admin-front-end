@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import ContentLayout from "@sd-ui-admin/layout/ContentLayout";
 
 export default function Home() {

@@ -39,13 +39,6 @@ export function EventDetail({ id }: EventDetailProps) {
     setNextId(nextId + 1);
   };
 
-  const moveSection = (index: number, direction: 'up' | 'down') => {
-    const newSections = [...sections];
-    const [movedSection] = newSections.splice(index, 1);
-    newSections.splice(direction === 'up' ? index - 1 : index + 1, 0, movedSection);
-    setSections(newSections);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Submit logic for updating the event data
