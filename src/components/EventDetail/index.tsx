@@ -1,50 +1,53 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useGetEventPage } from "@sd-ui-admin/api/event/event.queries";
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useGetEventPage } from '@sd-ui-admin/api/event/event.queries';
 import * as styles from './index.css';
-import TextInputForm from "@sd-ui-admin/components/TextInputForm";
+import TextInputForm from '@sd-ui-admin/components/TextInputForm';
+import { EventDetailResponse, EventDetailRequest } from '@sd-ui-admin/types';
 
 export interface EventDetailProps {
   id: number;
 }
 
-interface Section {
-  id: number;
-  type: string;
-}
-
 export function EventDetail({ id }: EventDetailProps) {
   const { data, isLoading, isError, error } = useGetEventPage(id);
-  const [sections, setSections] = useState<Section[]>([]);
-  const [nextId, setNextId] = useState(1);
-  const [selectedSection, setSelectedSection] = useState('button');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
 
+  // useForm에 제네릭 타입을 제대로 설정합니다.
+  const { register, handleSubmit, setValue, getValues, watch } = useForm<EventDetailRequest>({
+    mode: "onBlur",
+    defaultValues: {
+      eventTitle: '',
+      header: '',
+      image: '',
+      button: '',
+      carousel: '',
+      footer: '',
+      description: '',
+    },
+  });
 
+  // data가 로드되었을 때 setValue로 폼 필드를 업데이트
   useEffect(() => {
     if (data) {
-      setTitle(data.pageJson.title);
-      setDescription(data.pageJson.description);
+      setValue('header', data.pageJson.header );
+      setValue('image', data.pageJson.image);
+      setValue('button', data.pageJson.button);
+      setValue('carousel', data.pageJson.carousel);
+      setValue('footer', 'ss');
+      setValue('description', data.pageJson.description);
+      setValue('eventTitle', 'sdasd');
     }
-  }, [data]);
+  }, [data, setValue]);
 
 
-  const addSection = () => {
-    setSections([...sections, { id: nextId, type: selectedSection }]);
-    setNextId(nextId + 1);
+  const onSubmit = (formData: EventDetailRequest) => {
+    console.log('getValues:', watch());
+    console.log('Updated Event:', formData);
+    console.log(register);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Updated Event:', {
-      eventId: data?.eventId,
-      title,
-      description,
-      sections,
-    });
-  };
   if (isLoading || !data) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
@@ -52,22 +55,21 @@ export function EventDetail({ id }: EventDetailProps) {
     <div className={styles.container}>
       <section className={styles.section}>
         <h2>Event Detail Form</h2>
-        <div className={styles.inputGroup}>
-          <select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
-            <option value="button">Button Area</option>
-            <option value="image">Image Area</option>
-            <option value="carousel">Carousel Area</option>
-          </select>
-          <button type="button" onClick={addSection}>콘텐츠 추가</button>
-        </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.readOnlyFields}>
             <p>Event ID: {data?.eventId}</p>
             <p>Created At: {new Date(data.createdAt).toLocaleString()}</p>
             <p>Description: {data?.pageJson.description}</p>
           </div>
 
-          <TextInputForm label="Title" name="title" value={data?.pageJson.title} onChange={(e) => setTitle(e.target.value)} />
+          <TextInputForm label="EventTitle" name={'eventTitle'} register={register('eventTitle')} />
+          <TextInputForm label="Description" name={'description'} register={register('description')} />
+          <TextInputForm label="Header" name={'header'} register={register('header')} />
+          <TextInputForm label="Image" name={'image'} register={register('image')} />
+          <TextInputForm label="Button" name={'button'} register={register('button')} />
+          <TextInputForm label="Carousel" name={'carousel'} register={register('carousel')} />
+          <TextInputForm label="Footer" name={'footer'} register={register('footer')} />
+
           <div className={styles.saveButtonContainer}>
             <button type="submit">Save Changes</button>
           </div>
