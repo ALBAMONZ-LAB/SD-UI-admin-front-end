@@ -13,7 +13,7 @@ export function TextInputForm({ label, name, register, ...rest }: TextInputFormP
   return (
     <div className={styles.inputGroup}>
       <label>{label}</label>
-      <input {...register} value={value || ''}{...inputProps} />
+      <input {...register} id={name} {...inputProps} />
     </div>
   );
 }

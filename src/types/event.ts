@@ -1,11 +1,10 @@
 export interface PageJson {
-  title: string;
   header: string;
-  image: string;
-  button: string;
-  carousel: string;
+  image?: string;
+  button?: string;
+  carousel?: string;
   footer: string;
-  description: string;
+  description?: string;
 }
 export interface EventDetailResponse {
   id: number;
@@ -13,4 +12,8 @@ export interface EventDetailResponse {
   eventTitle: string;
   pageJson: PageJson;
   createdAt: string;
+}
+
+export interface EventDetailRequest extends PageJson {
+  eventTitle: string;
 }
