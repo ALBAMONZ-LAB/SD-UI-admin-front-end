@@ -3,16 +3,23 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 export type StyleType = 'padding' | 'margin' | 'background' | 'fontSize' | 'border' | 'borderRadius' | 'color';
 export type PageJsonStyleKeys = Exclude<
   {
-    [K in keyof PageJson]: PageJson[K] extends string | undefined ? never : K;
+    [K in keyof PageJson]: PageJson[K] extends string | undefined | number ? never : K;
   }[keyof PageJson],
   undefined
 >;
 export type StyleConfig = Record<StyleType, string>;
-export type StyleFormRegisterFieldType = Record<PageJsonStyleKeys, UseFormRegisterReturn>;
+export type StyleFormRegisterArrayType =`${PageJsonStyleKeys}.${number}`;
+export type StyleFormRegisterFieldType = Record<StyleFormRegisterArrayType, UseFormRegisterReturn>;
+export type ShowStyleFieldsType = Record<PageJsonStyleKeys, boolean>;
 
-export interface ImageConfig {
-  src: string;
+export interface DefaultStyleConfig {
+  orderNo: number;
   style: StyleConfig;
+  fieldType: PageJsonStyleKeys;
+}
+
+export interface ImageConfig extends DefaultStyleConfig {
+  src: string;
 }
 
 export interface IconType {
@@ -20,24 +27,21 @@ export interface IconType {
   size: number;
 }
 
-export interface ButtonConfig {
+export interface ButtonConfig extends DefaultStyleConfig {
   text: string;
   icon?: IconType;
-  style: StyleConfig;
 }
 
-export interface CarouselConfig {
+export interface CarouselConfig extends DefaultStyleConfig {
   src: string[];
-  style: StyleConfig;
 }
 
 export interface PageJson {
   header: string;
-  image?: ImageConfig;
-  button?: ButtonConfig;
-  carousel?: CarouselConfig;
-  footer: string;
-  description?: string;
+  image?: ImageConfig[];
+  button?: ButtonConfig[];
+  carousel?: CarouselConfig[];
+  footer: ImageConfig[];
 }
 
 export interface EventDetailResponse {
@@ -48,6 +52,7 @@ export interface EventDetailResponse {
   createdAt: string;
 }
 
-export interface EventDetailRequest extends PageJson {
+export interface EventRequest extends PageJson {
   eventTitle: string;
+  description: string;
 }
