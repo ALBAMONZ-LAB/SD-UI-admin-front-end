@@ -1,5 +1,6 @@
 'use client';
 
+import { EventFormSection, TextInputForm } from '@sd-ui-admin/components';
 import {
   DEFAULT_BUTTON_DATA,
   DEFAULT_CAROUSEL_DATA,
@@ -18,7 +19,6 @@ import {
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import * as styles from './index.css';
-import { EventFormSection, TextInputForm } from '@sd-ui-admin/components';
 
 export function EventRegisterClient() {
   const [showStyleFields, setShowStyleFields] = useState<ShowStyleFieldsType>({
@@ -31,11 +31,13 @@ export function EventRegisterClient() {
   const [selectedSection, setSelectedSection] = useState<PageJsonStyleKeys>('image');
 
   const { register, handleSubmit, control, setValue } = useForm<EventRequest>({
-    mode: 'onSubmit',
     defaultValues: {
       eventTitle: '',
       header: '',
       description: '',
+      image: [],
+      button: [],
+      carousel: [],
     },
   });
 
@@ -60,10 +62,15 @@ export function EventRegisterClient() {
 
   const onSubmit = (formData: EventRequest) => {
     setFormDataState(formData);
-    console.log('Updated Event (JSON format):', JSON.stringify(formData, null, 2));
   };
 
   const handleStyleFields = (fieldPrefix: StyleFormRegisterArrayType) => {
+    console.log(
+      Object.keys(DEFAULT_STYLE).reduce((acc, styleKey) => {
+        acc[styleKey as StyleFormRegisterArrayType] = register(`${fieldPrefix}.style.${styleKey as StyleType}`);
+        return acc;
+      }, {} as StyleFormRegisterFieldType),
+    );
     return Object.keys(DEFAULT_STYLE).reduce((acc, styleKey) => {
       acc[styleKey as StyleFormRegisterArrayType] = register(`${fieldPrefix}.style.${styleKey as StyleType}`);
       return acc;
@@ -87,7 +94,10 @@ export function EventRegisterClient() {
     }
   };
 
-  const sortedFields = [...imageFields, ...buttonFields, ...carouselFields].sort((a, b) => a.orderNo - b.orderNo);
+  const sortedFields = [...imageFields, ...buttonFields, ...carouselFields]
+    .filter(f => f != null)
+    .filter(f => f?.orderNo !== undefined)
+    .sort((a, b) => a.orderNo - b.orderNo);
   return (
     <div className={styles.container}>
       <section className={styles.section}>
@@ -128,8 +138,8 @@ export function EventRegisterClient() {
                 textInputName={registerName}
                 register={register(registerName as StyleFormRegisterArrayType)}
                 styleFields={handleStyleFields(`${field.fieldType}.${field.orderNo}`)}
-                showStyleFields={showStyleFields['image']}
-                toggleStyleFields={() => toggleStyleFields('image')}
+                showStyleFields={showStyleFields[field.fieldType]}
+                toggleStyleFields={() => toggleStyleFields(field.fieldType)}
               />
             );
           })}
