@@ -1,6 +1,5 @@
-
 import { DocumentNode } from '@apollo/client';
-import { apolloClient } from "@sd-ui-admin/api/apolloClient";
+import { apolloClient } from '@sd-ui-admin/api/apolloClient';
 
 /**
  * GraphQL 요청을 처리하는 공통 함수

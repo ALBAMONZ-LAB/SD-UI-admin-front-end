@@ -7,7 +7,6 @@ export interface ContentLayoutProps {
 }
 
 function ContentLayout({ children, title }: ContentLayoutProps) {
-
   return (
     <div className={styles.contentLayout}>
       <h1>{title}</h1>

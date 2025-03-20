@@ -1,5 +1,5 @@
-import { style } from "@vanilla-extract/css";
+import { style } from '@vanilla-extract/css';
 
 export const contentLayout = style({
-  padding: '40px'
+  padding: '40px',
 });

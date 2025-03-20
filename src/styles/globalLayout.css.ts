@@ -29,7 +29,6 @@ export const header = style({
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 });
 
-
 export const userMenu = style({
   fontSize: '16px',
 });

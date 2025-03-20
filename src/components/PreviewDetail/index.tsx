@@ -1,17 +1,15 @@
-import { EventDetailRequest } from "@sd-ui-admin/types";
-import { useFormContext, useWatch } from "react-hook-form";
+import { EventDetailRequest } from '@sd-ui-admin/types';
+import { useFormContext, useWatch } from 'react-hook-form';
+import React from 'react';
 
-
-export function PreviewDetail(){
+export const PreviewDetail = React.memo(function PreviewDetail() {
   const { control } = useFormContext<EventDetailRequest>();
-  const eventTitle = useWatch({ control, name: 'eventTitle' });
+  const [eventTitle, header, image, description] = useWatch({
+    control,
+    name: ['eventTitle', 'header', 'image', 'description'],
+  });
 
-
-  return (
-    <>
-      <pre>{eventTitle}</pre>
-    </>
-  )
-}
+  return <>{header}</>;
+});
 
 export default PreviewDetail;

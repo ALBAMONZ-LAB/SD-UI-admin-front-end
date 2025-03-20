@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useGetEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { DEFAULT_BUTTON_STYLE, DEFAULT_CAROUSEL_STYLE, DEFAULT_IMAGE_STYLE } from '@sd-ui-admin/constant';
@@ -47,8 +47,8 @@ export function EventDetail({ id }: EventDetailProps) {
   });
 
   // useForm에 제네릭 타입을 제대로 설정합니다.
-  const methods= useForm<EventDetailRequest>({
-    mode: "onBlur",
+  const methods = useForm<EventDetailRequest>({
+    mode: 'onBlur',
     defaultValues: {
       eventTitle: '',
       header: '',
@@ -142,17 +142,17 @@ export function EventDetail({ id }: EventDetailProps) {
 
           <TextInputForm label="하단(Footer)" name={'footer'} register={register('footer')} />
 
-          <div className={styles.saveButtonContainer}>
-            <button type="submit">Save Changes</button>
-          </div>
-        </form>
-      </section>
+            <div className={styles.saveButtonContainer}>
+              <button type="submit">Save Changes</button>
+            </div>
+          </form>
+        </section>
 
-      <section className={styles.section}>
-        <h2>Preview</h2>
-        <PreviewDetail />
-      </section>
-    </div>
+        <section className={styles.section}>
+          <h2>Preview</h2>
+          <PreviewDetail />
+        </section>
+      </div>
     </FormProvider>
   );
 }

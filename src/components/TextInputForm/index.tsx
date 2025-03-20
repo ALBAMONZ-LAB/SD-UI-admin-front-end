@@ -1,4 +1,4 @@
-import { UseFormRegisterReturn } from 'react-hook-form';
+import { UseFormRegisterReturn } from "react-hook-form";
 import * as styles from './index.css';
 import { InputHTMLAttributes } from 'react';
 
