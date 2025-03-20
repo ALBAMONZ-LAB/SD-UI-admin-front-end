@@ -6,3 +6,10 @@ export const inputGroup = style({
   gap:'10px',
   marginBottom: '16px',
 });
+
+export const input = style({
+  padding: '0.5rem',
+  border: '1px solid #ccc',
+  borderRadius: '4px',
+  fontSize: '1rem',
+});
