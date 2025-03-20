@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useGetEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { DEFAULT_BUTTON_STYLE, DEFAULT_CAROUSEL_STYLE, DEFAULT_IMAGE_STYLE } from '@sd-ui-admin/constant';
@@ -11,11 +11,13 @@ import {
   StyleConfig,
   StyleFormRegisterFieldType,
   StyleType,
+  EventDetailResponse
 } from '@sd-ui-admin/types';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider} from 'react-hook-form';
 import * as styles from './index.css';
 import { EventFormSection, TextInputForm } from '@sd-ui-admin/components';
+import { PreviewDetail } from "@sd-ui-admin/components";
 
 export interface EventDetailProps {
   id: number;
@@ -44,7 +46,8 @@ export function EventDetail({ id }: EventDetailProps) {
     carousel: false,
   });
 
-  const { register, handleSubmit, setValue } = useForm<EventDetailRequest>({
+  // useForm에 제네릭 타입을 제대로 설정합니다.
+  const methods = useForm<EventDetailRequest>({
     mode: 'onBlur',
     defaultValues: {
       eventTitle: '',
@@ -57,6 +60,9 @@ export function EventDetail({ id }: EventDetailProps) {
     },
   });
 
+  const { register, handleSubmit, setValue, getValues, watch } = methods;
+
+  // data가 로드되었을 때 setValue로 폼 필드를 업데이트
   useEffect(() => {
     if (data) {
       setValue('header', data.pageJson.header);
@@ -93,6 +99,7 @@ export function EventDetail({ id }: EventDetailProps) {
   }
 
   return (
+    <FormProvider {...methods}>
     <div className={styles.container}>
       <section className={styles.section}>
         <h2>Event Detail Form</h2>
@@ -135,17 +142,18 @@ export function EventDetail({ id }: EventDetailProps) {
 
           <TextInputForm label="하단(Footer)" name={'footer'} register={register('footer')} />
 
-          <div className={styles.saveButtonContainer}>
-            <button type="submit">Save Changes</button>
-          </div>
-        </form>
-      </section>
+            <div className={styles.saveButtonContainer}>
+              <button type="submit">Save Changes</button>
+            </div>
+          </form>
+        </section>
 
-      <section className={styles.section}>
-        <h2>PageJSON</h2>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </section>
-    </div>
+        <section className={styles.section}>
+          <h2>Preview</h2>
+          <PreviewDetail />
+        </section>
+      </div>
+    </FormProvider>
   );
 }
 
