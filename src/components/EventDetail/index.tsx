@@ -1,38 +1,51 @@
 'use client'
 
 import { useGetEventPage } from '@sd-ui-admin/api/event/event.queries';
-import TextInputForm from '@sd-ui-admin/components/TextInputForm';
 import { DEFAULT_BUTTON_STYLE, DEFAULT_CAROUSEL_STYLE, DEFAULT_IMAGE_STYLE } from '@sd-ui-admin/constant';
-import { ButtonConfig, CarouselConfig, EventDetailRequest, ImageConfig, StyleConfig } from '@sd-ui-admin/types';
+import {
+  ButtonConfig,
+  CarouselConfig,
+  EventDetailRequest,
+  ImageConfig,
+  PageJsonStyleKeys,
+  StyleConfig,
+  StyleFormRegisterFieldType,
+  StyleType,
+} from '@sd-ui-admin/types';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as styles from './index.css';
+import { EventFormSection, TextInputForm } from '@sd-ui-admin/components';
 
 export interface EventDetailProps {
   id: number;
 }
 
+type ShowStyleFieldsType = Record<PageJsonStyleKeys, boolean>;
 
 const defaultStyle: StyleConfig = {
   padding: '',
   margin: '',
   background: '',
-  fontsize: '',
+  fontSize: '',
   border: '',
   borderRadius: '',
-  color: ''
+  color: '',
 };
-
 const defaultImage: ImageConfig = { src: '', style: DEFAULT_IMAGE_STYLE };
 const defaultButton: ButtonConfig = { text: '', style: DEFAULT_BUTTON_STYLE };
 const defaultCarousel: CarouselConfig = { src: [], style: DEFAULT_CAROUSEL_STYLE };
 
 export function EventDetail({ id }: EventDetailProps) {
   const { data, isLoading, isError, error } = useGetEventPage(id);
-  const [showStyleFields, setShowStyleFields] = useState<{ [key: string]: boolean }>({});
+  const [showStyleFields, setShowStyleFields] = useState<ShowStyleFieldsType>({
+    image: false,
+    button: false,
+    carousel: false,
+  });
 
-  const { register, handleSubmit, setValue, watch } = useForm<EventDetailRequest>({
-    mode: "onBlur",
+  const { register, handleSubmit, setValue } = useForm<EventDetailRequest>({
+    mode: 'onBlur',
     defaultValues: {
       eventTitle: '',
       header: '',
@@ -55,9 +68,8 @@ export function EventDetail({ id }: EventDetailProps) {
       setValue('eventTitle', data.eventTitle);
     }
   }, [data, setValue]);
-
-  const toggleStyleFields = (field: string) => {
-    setShowStyleFields((prev) => ({ ...prev, [field]: !prev[field] }));
+  const toggleStyleFields = (field: PageJsonStyleKeys) => {
+    setShowStyleFields(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
   const onSubmit = (formData: EventDetailRequest) => {
@@ -65,8 +77,20 @@ export function EventDetail({ id }: EventDetailProps) {
     console.log('Updated Event (JSON format):', JSON.stringify(formData, null, 2));
   };
 
-  if (isLoading || !data) return <p>Loading...</p>;
-  if (isError) return <p>Error: {error.message}</p>;
+  const handleStyleFields = (fieldPrefix: PageJsonStyleKeys) => {
+    return Object.keys(defaultStyle).reduce((acc, styleKey) => {
+      acc[styleKey as PageJsonStyleKeys] = register(`${fieldPrefix}.style.${styleKey as StyleType}`);
+      return acc;
+    }, {} as StyleFormRegisterFieldType);
+  };
+
+  if (isLoading || !data) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
     <div className={styles.container}>
@@ -78,30 +102,38 @@ export function EventDetail({ id }: EventDetailProps) {
             <p>Created At: {new Date(data.createdAt).toLocaleString()}</p>
             <p>Description: {data?.pageJson.description}</p>
           </div>
+          <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
+          <TextInputForm label="설명" name={'description'} register={register('description')} />
+          <TextInputForm label="헤더(Header)" name={'header'} register={register('header')} />
 
-          <TextInputForm label="EventTitle" name={'eventTitle'} register={register('eventTitle')} />
-          <TextInputForm label="Description" name={'description'} register={register('description')} />
-          <TextInputForm label="Header" name={'header'} register={register('header')} />
-          
-          <TextInputForm label="Image Source" name={'image.src'} register={register('image.src')} />
-          <button type="button" onClick={() => toggleStyleFields('image')}>Toggle Image Style</button>
-          {showStyleFields['image'] && Object.keys(defaultStyle).map((styleKey) => (
-            <TextInputForm key={styleKey} label={`Image ${styleKey}`} name={`image.style.${styleKey}`} register={register(`image.style.${styleKey}`)} />
-          ))}
+          <EventFormSection
+            label="이미지(Image)"
+            textInputName="image.src"
+            register={register('image.src')}
+            styleFields={handleStyleFields('image')}
+            showStyleFields={showStyleFields['image']}
+            toggleStyleFields={() => toggleStyleFields('image')}
+          />
 
-          <TextInputForm label="Button Text" name={'button.text'} register={register('button.text')} />
-          <button type="button" onClick={() => toggleStyleFields('button')}>Toggle Button Style</button>
-          {showStyleFields['button'] && Object.keys(defaultStyle).map((styleKey) => (
-            <TextInputForm key={styleKey} label={`Button ${styleKey}`} name={`button.style.${styleKey}`} register={register(`button.style.${styleKey}`)} />
-          ))}
+          <EventFormSection
+            label="버튼(Button)"
+            textInputName="button.text"
+            register={register('button.text')}
+            styleFields={handleStyleFields('button')}
+            showStyleFields={showStyleFields['button']}
+            toggleStyleFields={() => toggleStyleFields('button')}
+          />
 
-          <TextInputForm label="Carousel Style" name={'carousel.style'} register={register('carousel.style')} />
-          <button type="button" onClick={() => toggleStyleFields('carousel')}>Toggle Carousel Style</button>
-          {showStyleFields['carousel'] && Object.keys(defaultStyle).map((styleKey) => (
-            <TextInputForm key={styleKey} label={`Carousel ${styleKey}`} name={`carousel.style.${styleKey}`} register={register(`carousel.style.${styleKey}`)} />
-          ))}
+          <EventFormSection
+            label="swiper(Carousel)"
+            textInputName="carousel.src"
+            register={register('carousel.src')}
+            styleFields={handleStyleFields('carousel')}
+            showStyleFields={showStyleFields['carousel']}
+            toggleStyleFields={() => toggleStyleFields('carousel')}
+          />
 
-          <TextInputForm label="Footer" name={'footer'} register={register('footer')} />
+          <TextInputForm label="하단(Footer)" name={'footer'} register={register('footer')} />
 
           <div className={styles.saveButtonContainer}>
             <button type="submit">Save Changes</button>

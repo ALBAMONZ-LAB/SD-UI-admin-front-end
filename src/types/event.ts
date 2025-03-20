@@ -1,12 +1,14 @@
-export interface StyleConfig {
-  padding: string;
-  margin: string;
-  background: string;
-  fontsize: string;
-  border: string;
-  borderRadius: string;
-  color: string;
-}
+import { UseFormRegisterReturn } from 'react-hook-form';
+
+export type StyleType = 'padding' | 'margin' | 'background' | 'fontSize' | 'border' | 'borderRadius' | 'color';
+export type PageJsonStyleKeys = Exclude<
+  {
+    [K in keyof PageJson]: PageJson[K] extends string | undefined ? never : K;
+  }[keyof PageJson],
+  undefined
+>;
+export type StyleConfig = Record<StyleType, string>;
+export type StyleFormRegisterFieldType = Record<PageJsonStyleKeys, UseFormRegisterReturn>;
 
 export interface ImageConfig {
   src: string;
