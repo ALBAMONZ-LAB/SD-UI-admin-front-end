@@ -1,4 +1,3 @@
-import { EventDetail } from '@sd-ui-admin/components';
 import { notFound } from 'next/navigation';
 import ContentLayout from '@sd-ui-admin/layout/ContentLayout';
 
@@ -15,7 +14,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
   return (
     <ContentLayout title={'이벤트 상세'}>
-      <EventDetail id={eventId} />
+      <div>/event/register 등록페이지 작업 후 작업예정</div>
     </ContentLayout>
   );
 }

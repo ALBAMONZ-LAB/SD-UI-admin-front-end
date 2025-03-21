@@ -11,6 +11,7 @@ interface EventFormSectionProps {
   register: UseFormRegisterReturn;
   showStyleFields: boolean;
   toggleStyleFields: () => void;
+  placeholder?: string;
 }
 
 export function EventFormSection({
@@ -20,15 +21,17 @@ export function EventFormSection({
   register,
   showStyleFields,
   toggleStyleFields,
+  placeholder,
 }: EventFormSectionProps) {
   return (
     <div className={styles.eventFormSection}>
-      <div className={styles.eventFormMain}>
-        <TextInputForm label={label} name={textInputName} register={register} />
-        <button type="button" onClick={toggleStyleFields}>
-          Toggle {label} Style
-        </button>
-      </div>
+      <TextInputForm
+        label={label}
+        name={textInputName}
+        register={register}
+        onButtonClick={toggleStyleFields}
+        placeholder={placeholder}
+      />
       {showStyleFields && styleFields && <StyleInputForm styleFields={styleFields} />}
     </div>
   );

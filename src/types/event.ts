@@ -1,43 +1,37 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 export type StyleType = 'padding' | 'margin' | 'background' | 'fontSize' | 'border' | 'borderRadius' | 'color';
-export type PageJsonStyleKeys = Exclude<
-  {
-    [K in keyof PageJson]: PageJson[K] extends string | undefined ? never : K;
-  }[keyof PageJson],
-  undefined
->;
+export type PageJsonBodyItemType = 'image' | 'button' | 'carousel' | 'footer';
 export type StyleConfig = Record<StyleType, string>;
-export type StyleFormRegisterFieldType = Record<PageJsonStyleKeys, UseFormRegisterReturn>;
-
-export interface ImageConfig {
-  src: string;
-  style: StyleConfig;
-}
+export type FormStyleRegisterType = `pageJson.body.${number}.style`;
+export type FormContentsRegisterNameType = `pageJson.body.${number}.contents.${string}`;
+export type StyleFormRegisterFieldType = Record<FormStyleRegisterType, UseFormRegisterReturn>;
+export type ShowStyleFieldsType = Record<PageJsonBodyItemType, boolean>;
 
 export interface IconType {
   iconName: string;
   size: number;
 }
 
-export interface ButtonConfig {
-  text: string;
+export interface PageJsonContentsItem {
+  src?: string | string[];
+  text?: string;
   icon?: IconType;
-  style: StyleConfig;
+
+  [key: string]: unknown;
 }
 
-export interface CarouselConfig {
-  src: string[];
+export interface PageBodyType  {
+  fieldType: PageJsonBodyItemType;
+  orderNo: number;
+  contents: PageJsonContentsItem;
   style: StyleConfig;
 }
 
 export interface PageJson {
   header: string;
-  image?: ImageConfig;
-  button?: ButtonConfig;
-  carousel?: CarouselConfig;
-  footer: string;
-  description?: string;
+  body?: PageBodyType[];
+  footer: Omit<PageBodyType,'orderNo'>;
 }
 
 export interface EventDetailResponse {
@@ -48,6 +42,8 @@ export interface EventDetailResponse {
   createdAt: string;
 }
 
-export interface EventDetailRequest extends PageJson {
+export interface EventRequest {
   eventTitle: string;
+  description: string;
+  pageJson: PageJson;
 }
