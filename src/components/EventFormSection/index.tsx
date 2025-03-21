@@ -3,7 +3,6 @@ import TextInputForm from '@sd-ui-admin/components/TextInputForm';
 import StyleInputForm from '@sd-ui-admin/components/StyleInputForm';
 import * as styles from './index.css';
 import { StyleFormRegisterFieldType } from '@sd-ui-admin/types';
-import { selectBox } from "./index.css";
 
 interface EventFormSectionProps {
   label: string;
@@ -16,6 +15,7 @@ interface EventFormSectionProps {
   orderNo: number;
   onOrderNoChange: (orderNo: number) => void;
   maxOrderNo: number;
+  isArray?: boolean;
 }
 
 export function EventFormSection({
@@ -29,6 +29,7 @@ export function EventFormSection({
   orderNo,
   onOrderNoChange,
   maxOrderNo,
+  isArray = false,
 }: EventFormSectionProps) {
   return (
     <div className={styles.eventFormSection}>
@@ -39,6 +40,7 @@ export function EventFormSection({
           register={register}
           onButtonClick={toggleStyleFields}
           placeholder={placeholder}
+          isArray={isArray}
         />
         <select className={styles.selectBox} value={orderNo} onChange={e => onOrderNoChange(Number(e.target.value))}>
           {Array.from({ length: maxOrderNo + 1 }, (_, i) => (

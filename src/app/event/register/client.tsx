@@ -20,7 +20,6 @@ export function EventRegisterClient() {
     image: false,
     button: false,
     carousel: false,
-    footer: false,
   });
   const [formDataState, setFormDataState] = useState<EventFormType>();
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
@@ -37,10 +36,7 @@ export function EventRegisterClient() {
     },
   });
 
-  const {
-    fields: contentsFields,
-    append: appendContents,
-  } = useFieldArray({
+  const { fields: contentsFields, append: appendContents } = useFieldArray({
     control,
     name: 'pageJson.body',
   });
@@ -71,6 +67,33 @@ export function EventRegisterClient() {
     [register],
   );
 
+  function getRegisterNameAndPlaceholder(fieldType: PageJsonBodyItemType, orderNo: number) {
+    const label = FORM_FIELD_TITLE[fieldType];
+    let registerName = `pageJson.body.${orderNo}.contents`;
+    let placeholder;
+    let isArray = false;
+    switch (fieldType) {
+      case 'button':
+        registerName += '.text';
+        placeholder = '서비스 시작';
+        break;
+      case 'carousel':
+        registerName += '.src';
+        placeholder = '이미지 URL, 이미지 URL (\',\') 구분';
+        isArray = true;
+        break;
+      case 'image':
+        registerName += '.src';
+        placeholder = 'https://example.com/image.jpg';
+        break;
+      default:
+        registerName += '.text';
+        placeholder = '입력';
+        break;
+    }
+    return { label, registerName, placeholder, isArray };
+  }
+
   const handleAddSection = () => {
     const nextOrderNo = Math.max(...contentsFields.map(f => f.orderNo ?? -1), -1) + 1;
     appendContents({ orderNo: nextOrderNo, ...ADD_DEFAULT_BODY_DATA[selectedSection] });
@@ -79,6 +102,7 @@ export function EventRegisterClient() {
   const handleOrderNoChange = (currentOrderNo: number, newOrderNo: number) => {
     const updatedFields = [...contentsFields].map(({ id, ...rest }) => rest);
     updatedFields[currentOrderNo].orderNo = newOrderNo;
+
     updatedFields.forEach((field, i) => {
       if (i !== currentOrderNo) {
         if (currentOrderNo < newOrderNo && field.orderNo > currentOrderNo && field.orderNo <= newOrderNo) {
@@ -88,10 +112,11 @@ export function EventRegisterClient() {
         }
       }
     });
-    updatedFields.sort((a, b) => a.orderNo - b.orderNo);
 
+    updatedFields.sort((a, b) => a.orderNo - b.orderNo);
     setValue('pageJson.body', updatedFields);
   };
+
   return (
     <div className={styles.container}>
       <section className={styles.section}>
@@ -116,25 +141,11 @@ export function EventRegisterClient() {
           <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
           <TextInputForm label="헤더(Header)" name={'pageJson.header'} register={register('pageJson.header')} />
 
-          {contentsFields.map((field, index) => {
-            const label = FORM_FIELD_TITLE[field.fieldType];
-            let registerName = `pageJson.body.${field.orderNo}.contents`;
-            let placeholder;
-            switch (field.fieldType) {
-              case 'button':
-                registerName += '.text';
-                placeholder = '서비스 시작';
-                break;
-              case 'carousel':
-              case 'image':
-                registerName += '.src';
-                placeholder = 'https://example.com/image.jpg';
-                break;
-              default:
-                registerName += '.text';
-                placeholder = '입력';
-                break;
-            }
+          {contentsFields.map(field => {
+            const { label, registerName, placeholder, isArray } = getRegisterNameAndPlaceholder(
+              field.fieldType,
+              field.orderNo,
+            );
 
             return (
               <EventFormSection
@@ -149,6 +160,7 @@ export function EventRegisterClient() {
                 orderNo={field.orderNo}
                 onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
                 maxOrderNo={contentsFields.length - 1}
+                isArray={isArray}
               />
             );
           })}

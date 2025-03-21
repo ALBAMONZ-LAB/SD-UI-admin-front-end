@@ -1,7 +1,7 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 export type StyleType = 'padding' | 'margin' | 'background' | 'fontSize' | 'border' | 'borderRadius' | 'color';
-export type PageJsonBodyItemType = 'image' | 'button' | 'carousel' | 'footer';
+export type PageJsonBodyItemType = 'image' | 'button' | 'carousel';
 export type StyleConfig = Record<StyleType, string>;
 export type FormStyleRegisterType = `pageJson.body.${number}.style`;
 export type FormContentsRegisterNameType = `pageJson.body.${number}.contents.${string}`;
@@ -14,7 +14,7 @@ export interface IconType {
 }
 
 export interface PageJsonContentsItem {
-  src?: string | string[];
+  src?: string;
   text?: string;
   icon?: IconType;
 
