@@ -21,7 +21,7 @@ export interface PageJsonContentsItem {
   [key: string]: unknown;
 }
 
-export interface PageBodyType  {
+export interface PageBodyType {
   fieldType: PageJsonBodyItemType;
   orderNo: number;
   contents: PageJsonContentsItem;
@@ -31,10 +31,8 @@ export interface PageBodyType  {
 export interface PageJson {
   header: string;
   body?: PageBodyType[];
-  footer: Omit<PageBodyType,'orderNo'>;
+  footer: Omit<PageBodyType, 'orderNo'>;
 }
-
-
 
 export interface EventFormType {
   eventTitle: string;

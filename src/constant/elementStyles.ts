@@ -51,7 +51,7 @@ export const DEFAULT_STYLE: StyleConfig = {
 export const ADD_DEFAULT_BODY_DATA: Record<PageJsonBodyItemType, Omit<PageBodyType, 'orderNo'>> = {
   image: { contents: { src: '' }, style: DEFAULT_IMAGE_STYLE, fieldType: 'image' },
   button: { contents: { text: '', icon: undefined }, style: DEFAULT_BUTTON_STYLE, fieldType: 'button' },
-  carousel: { contents: { src: [] }, style: DEFAULT_CAROUSEL_STYLE, fieldType: 'carousel' },
+  carousel: { contents: { src: '' }, style: DEFAULT_CAROUSEL_STYLE, fieldType: 'carousel' },
 };
 
 export const FORM_FIELD_TITLE = {
