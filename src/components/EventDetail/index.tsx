@@ -7,7 +7,7 @@
 //   CarouselConfig,
 //   EventDetailRequest,
 //   ImageConfig,
-//   PageJsonStyleKeys,
+//   PageJsonBodyItemType,
 //   StyleConfig,
 //   StyleFormRegisterFieldType,
 //   StyleType,
@@ -23,7 +23,7 @@
 //   id: number;
 // }
 //
-// type ShowStyleFieldsType = Record<PageJsonStyleKeys, boolean>;
+// type ShowStyleFieldsType = Record<PageJsonBodyItemType, boolean>;
 //
 // const defaultStyle: StyleConfig = {
 //   padding: '',
@@ -74,7 +74,7 @@
 //       setValue('eventTitle', data.eventTitle);
 //     }
 //   }, [data, setValue]);
-//   const toggleStyleFields = (field: PageJsonStyleKeys) => {
+//   const toggleStyleFields = (field: PageJsonBodyItemType) => {
 //     setShowStyleFields(prev => ({ ...prev, [field]: !prev[field] }));
 //   };
 //
@@ -83,9 +83,9 @@
 //     console.log('Updated Event (JSON format):', JSON.stringify(formData, null, 2));
 //   };
 //
-//   const handleStyleFields = (fieldPrefix: PageJsonStyleKeys) => {
+//   const handleStyleFields = (fieldPrefix: PageJsonBodyItemType) => {
 //     return Object.keys(defaultStyle).reduce((acc, styleKey) => {
-//       acc[styleKey as PageJsonStyleKeys] = register(`${fieldPrefix}.style.${styleKey as StyleType}`);
+//       acc[styleKey as PageJsonBodyItemType] = register(`${fieldPrefix}.style.${styleKey as StyleType}`);
 //       return acc;
 //     }, {} as StyleFormRegisterFieldType);
 //   };
