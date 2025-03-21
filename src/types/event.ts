@@ -34,16 +34,9 @@ export interface PageJson {
   footer: Omit<PageBodyType,'orderNo'>;
 }
 
-export interface EventDetailResponse {
-  id: number;
-  eventId: number;
-  eventTitle: string;
-  pageJson: PageJson;
-  createdAt: string;
-}
 
-export interface EventRequest {
+
+export interface EventFormType {
   eventTitle: string;
-  description: string;
   pageJson: PageJson;
 }

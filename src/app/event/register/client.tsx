@@ -3,7 +3,7 @@
 import { EventFormSection, TextInputForm } from '@sd-ui-admin/components';
 import { ADD_DEFAULT_BODY_DATA, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
 import {
-  EventRequest,
+  EventFormType,
   FormContentsRegisterNameType,
   FormStyleRegisterType,
   PageJsonBodyItemType,
@@ -13,6 +13,7 @@ import {
 import { useCallback, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import * as styles from './index.css';
+import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 
 export function EventRegisterClient() {
   const [showStyleFields, setShowStyleFields] = useState<ShowStyleFieldsType>({
@@ -21,13 +22,13 @@ export function EventRegisterClient() {
     carousel: false,
     footer: false,
   });
-  const [formDataState, setFormDataState] = useState<EventRequest>();
+  const [formDataState, setFormDataState] = useState<EventFormType>();
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
+  const { mutate } = usePostEventPage();
 
-  const { register, handleSubmit, control } = useForm<EventRequest>({
+  const { register, handleSubmit, control } = useForm<EventFormType>({
     defaultValues: {
       eventTitle: '',
-      description: '',
       pageJson: {
         header: '',
         body: [],
@@ -45,13 +46,17 @@ export function EventRegisterClient() {
     setShowStyleFields(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const onSubmit = (formData: EventRequest) => {
+  const onSubmit = (formData: EventFormType) => {
     setFormDataState(formData);
+    const formDataWithStringPageJson = {
+      ...formData,
+      pageJson: JSON.stringify(formData.pageJson),
+    };
+    mutate({ ...formDataWithStringPageJson, eventId: 2000 });
   };
 
   const handleStyleFields = useCallback(
     (fieldPrefix: FormStyleRegisterType) => {
-      console.log(fieldPrefix);
       return Object.keys(DEFAULT_STYLE).reduce((acc, styleKey) => {
         acc[styleKey as FormStyleRegisterType] = register(`${fieldPrefix}.${styleKey}` as FormStyleRegisterType);
         return acc;
@@ -87,7 +92,6 @@ export function EventRegisterClient() {
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
-          <TextInputForm label="설명" name={'description'} register={register('description')} />
           <TextInputForm label="헤더(Header)" name={'pageJson.header'} register={register('pageJson.header')} />
 
           {contentsFields.map(field => {
@@ -124,13 +128,13 @@ export function EventRegisterClient() {
             );
           })}
           <div className={styles.saveButtonContainer}>
-            <button type="submit">Save Changes</button>
+            <button type="submit" className={styles.addSectionButton}>이벤트 등록</button>
           </div>
         </form>
       </section>
 
       <section className={styles.section}>
-        <h2>PageJSON</h2>
+        <h2>Request Body</h2>
         <pre>{JSON.stringify(formDataState, null, 2)}</pre>
       </section>
     </div>

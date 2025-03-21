@@ -1,6 +1,6 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { getEventDetailPage } from '@sd-ui-admin/api/event/event.api';
-import { EventDetailResponse } from '@sd-ui-admin/types';
+import { useMutation, UseMutationResult, useQuery, UseQueryResult } from '@tanstack/react-query';
+import { getEventDetailPage, postEventPage } from '@sd-ui-admin/api/event/event.api';
+import { EventDetailResponse, EventRequest } from '@sd-ui-admin/types';
 
 // export const GET_EVENT_DETAIL_PAGE = gql`
 //   query GetEventPageComponents($eventId: Float!) {
@@ -21,4 +21,8 @@ import { EventDetailResponse } from '@sd-ui-admin/types';
 
 export const useGetEventPage = (eventId: number): UseQueryResult<EventDetailResponse, any> => {
   return useQuery({ queryKey: ['event', eventId], queryFn: () => getEventDetailPage(eventId) });
+};
+
+export const usePostEventPage = (): UseMutationResult<any, unknown, EventRequest, unknown> => {
+  return useMutation({ mutationFn: (body: EventRequest) => postEventPage(body) });
 };
