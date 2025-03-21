@@ -2,14 +2,15 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
 import { InputHTMLAttributes, MouseEventHandler } from 'react';
 
-interface TextInputFormProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TextInputFormProps extends InputHTMLAttributes<HTMLElement> {
   label: string;
   name: string;
   register?: UseFormRegisterReturn;
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
+  isArray?: boolean;
 }
 
-export function TextInputForm({ label, name, register, onButtonClick, ...rest }: TextInputFormProps) {
+export function TextInputForm({ label, name, register, onButtonClick, isArray = false, ...rest }: TextInputFormProps) {
   return (
     <div className={styles.inputGroup}>
       <div className={styles.inputTitle}>
@@ -20,7 +21,7 @@ export function TextInputForm({ label, name, register, onButtonClick, ...rest }:
           </button>
         )}
       </div>
-      <input {...register} id={name} {...rest} />
+      {!isArray ? <input {...register} id={name} {...rest} /> : <textarea {...register} id={name} {...rest} />}
     </div>
   );
 }

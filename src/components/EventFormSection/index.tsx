@@ -12,6 +12,10 @@ interface EventFormSectionProps {
   showStyleFields: boolean;
   toggleStyleFields: () => void;
   placeholder?: string;
+  orderNo: number;
+  onOrderNoChange: (orderNo: number) => void;
+  maxOrderNo: number;
+  isArray?: boolean;
 }
 
 export function EventFormSection({
@@ -22,16 +26,30 @@ export function EventFormSection({
   showStyleFields,
   toggleStyleFields,
   placeholder,
+  orderNo,
+  onOrderNoChange,
+  maxOrderNo,
+  isArray = false,
 }: EventFormSectionProps) {
   return (
     <div className={styles.eventFormSection}>
-      <TextInputForm
-        label={label}
-        name={textInputName}
-        register={register}
-        onButtonClick={toggleStyleFields}
-        placeholder={placeholder}
-      />
+      <div className={styles.inputFormWrapper}>
+        <TextInputForm
+          label={label}
+          name={textInputName}
+          register={register}
+          onButtonClick={toggleStyleFields}
+          placeholder={placeholder}
+          isArray={isArray}
+        />
+        <select className={styles.selectBox} value={orderNo} onChange={e => onOrderNoChange(Number(e.target.value))}>
+          {Array.from({ length: maxOrderNo + 1 }, (_, i) => (
+            <option key={i} value={i}>
+              위치 순서: {i}
+            </option>
+          ))}
+        </select>
+      </div>
       {showStyleFields && styleFields && <StyleInputForm styleFields={styleFields} />}
     </div>
   );

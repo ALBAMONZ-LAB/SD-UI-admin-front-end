@@ -45,3 +45,8 @@ globalStyle('.container', {
   width: '100%',
   height: '100%',
 });
+
+globalStyle('::placeholder', {
+  fontSize: '12px', // Smaller font size
+  color: '#aaa', // Lighter color
+});
