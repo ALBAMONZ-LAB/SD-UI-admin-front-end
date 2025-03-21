@@ -4,9 +4,9 @@ import React from 'react';
 
 export const PreviewDetail = React.memo(function PreviewDetail() {
   const { control } = useFormContext<EventFormType>();
-  const [eventTitle, eventId, pageJson] = useWatch({
+  const [eventTitle, pageJson] = useWatch({
     control,
-    name: ['eventTitle', 'pageJson', 'eventId'],
+    name: ['eventTitle', 'pageJson'],
   });
 
   return <>{eventTitle}</>;

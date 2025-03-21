@@ -3,8 +3,9 @@ import { style } from '@vanilla-extract/css';
 export const inputGroup = style({
   display: 'flex',
   flexDirection: 'column',
-  gap:'10px',
+  gap: '10px',
   marginBottom: '16px',
+  width: '100%',
 });
 
 export const inputTitle = style({
@@ -22,7 +23,7 @@ export const toggleButton = style({
   cursor: 'pointer',
   fontSize: '12px',
   transition: 'background-color 0.3s ease',
-  flexShrink:'0',
+  flexShrink: '0',
   ':hover': {
     backgroundColor: '#000', // Black background on hover
   },

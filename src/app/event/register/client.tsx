@@ -10,7 +10,7 @@ import {
   ShowStyleFieldsType,
   StyleFormRegisterFieldType,
 } from '@sd-ui-admin/types';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import * as styles from './index.css';
 import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
@@ -26,7 +26,7 @@ export function EventRegisterClient() {
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
   const { mutate } = usePostEventPage();
 
-  const { register, handleSubmit, control } = useForm<EventFormType>({
+  const { register, handleSubmit, control, watch, setValue } = useForm<EventFormType>({
     defaultValues: {
       eventTitle: '',
       pageJson: {
@@ -37,17 +37,23 @@ export function EventRegisterClient() {
     },
   });
 
-  const { fields: contentsFields, append: appendContents } = useFieldArray({
+  const {
+    fields: contentsFields,
+    append: appendContents,
+  } = useFieldArray({
     control,
     name: 'pageJson.body',
   });
+
+  useEffect(() => {
+    setFormDataState(watch());
+  }, [watch]);
 
   const toggleStyleFields = (field: PageJsonBodyItemType) => {
     setShowStyleFields(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
   const onSubmit = (formData: EventFormType) => {
-    setFormDataState(formData);
     const formDataWithStringPageJson = {
       ...formData,
       pageJson: JSON.stringify(formData.pageJson),
@@ -67,8 +73,24 @@ export function EventRegisterClient() {
 
   const handleAddSection = () => {
     const nextOrderNo = Math.max(...contentsFields.map(f => f.orderNo ?? -1), -1) + 1;
-
     appendContents({ orderNo: nextOrderNo, ...ADD_DEFAULT_BODY_DATA[selectedSection] });
+  };
+
+  const handleOrderNoChange = (currentOrderNo: number, newOrderNo: number) => {
+    const updatedFields = [...contentsFields].map(({ id, ...rest }) => rest);
+    updatedFields[currentOrderNo].orderNo = newOrderNo;
+    updatedFields.forEach((field, i) => {
+      if (i !== currentOrderNo) {
+        if (currentOrderNo < newOrderNo && field.orderNo > currentOrderNo && field.orderNo <= newOrderNo) {
+          field.orderNo -= 1;
+        } else if (currentOrderNo > newOrderNo && field.orderNo < currentOrderNo && field.orderNo >= newOrderNo) {
+          field.orderNo += 1;
+        }
+      }
+    });
+    updatedFields.sort((a, b) => a.orderNo - b.orderNo);
+
+    setValue('pageJson.body', updatedFields);
   };
   return (
     <div className={styles.container}>
@@ -94,7 +116,7 @@ export function EventRegisterClient() {
           <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
           <TextInputForm label="헤더(Header)" name={'pageJson.header'} register={register('pageJson.header')} />
 
-          {contentsFields.map(field => {
+          {contentsFields.map((field, index) => {
             const label = FORM_FIELD_TITLE[field.fieldType];
             let registerName = `pageJson.body.${field.orderNo}.contents`;
             let placeholder;
@@ -124,11 +146,16 @@ export function EventRegisterClient() {
                 showStyleFields={showStyleFields[field.fieldType]}
                 toggleStyleFields={() => toggleStyleFields(field.fieldType)}
                 placeholder={placeholder}
+                orderNo={field.orderNo}
+                onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
+                maxOrderNo={contentsFields.length - 1}
               />
             );
           })}
           <div className={styles.saveButtonContainer}>
-            <button type="submit" className={styles.addSectionButton}>이벤트 등록</button>
+            <button type="submit" className={styles.addSectionButton}>
+              이벤트 등록
+            </button>
           </div>
         </form>
       </section>
