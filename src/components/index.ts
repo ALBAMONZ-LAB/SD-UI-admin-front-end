@@ -4,3 +4,4 @@ export * from './Sidebar/index';
 export * from './PreviewDetail';
 export * from './StyleInputForm';
 export * from './EventFormSection';
+export * from './DynamicComponents';
