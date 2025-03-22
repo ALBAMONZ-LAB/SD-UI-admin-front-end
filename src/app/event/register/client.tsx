@@ -1,6 +1,6 @@
 'use client';
 
-import { EventFormSection, TextInputForm } from '@sd-ui-admin/components';
+import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/components';
 import { ADD_DEFAULT_BODY_DATA, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
 import {
   EventFormType,
@@ -11,7 +11,7 @@ import {
   StyleFormRegisterFieldType,
 } from '@sd-ui-admin/types';
 import { useCallback, useEffect, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, FormProvider } from 'react-hook-form';
 import * as styles from './index.css';
 import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 
@@ -25,7 +25,7 @@ export function EventRegisterClient() {
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
   const { mutate } = usePostEventPage();
 
-  const { register, handleSubmit, control, watch, setValue } = useForm<EventFormType>({
+  const methods = useForm<EventFormType>({
     defaultValues: {
       eventTitle: '',
       pageJson: {
@@ -35,6 +35,8 @@ export function EventRegisterClient() {
       },
     },
   });
+
+  const { register, handleSubmit, control, watch, setValue } = methods;
 
   const { fields: contentsFields, append: appendContents } = useFieldArray({
     control,
@@ -79,7 +81,7 @@ export function EventRegisterClient() {
         break;
       case 'carousel':
         registerName += '.src';
-        placeholder = '이미지 URL, 이미지 URL (\',\') 구분';
+        placeholder = "이미지 URL, 이미지 URL (',') 구분";
         isArray = true;
         break;
       case 'image':
@@ -118,65 +120,67 @@ export function EventRegisterClient() {
   };
 
   return (
-    <div className={styles.container}>
-      <section className={styles.section}>
-        <div className={styles.addSection}>
-          <h3>콘텐츠 추가</h3>
-          <div className={styles.addSectionField}>
-            <select
-              className={styles.addSectionSelect}
-              value={selectedSection}
-              onChange={e => setSelectedSection(e.target.value as PageJsonBodyItemType)}
-            >
-              <option value="image">이미지</option>
-              <option value="button">버튼</option>
-              <option value="carousel">캐러셀</option>
-            </select>
-            <button className={styles.addSectionButton} type="button" onClick={handleAddSection}>
-              추가
-            </button>
+    <FormProvider {...methods}>
+      <div className={styles.container}>
+        <section className={styles.section}>
+          <div className={styles.addSection}>
+            <h3>콘텐츠 추가</h3>
+            <div className={styles.addSectionField}>
+              <select
+                className={styles.addSectionSelect}
+                value={selectedSection}
+                onChange={e => setSelectedSection(e.target.value as PageJsonBodyItemType)}
+              >
+                <option value="image">이미지</option>
+                <option value="button">버튼</option>
+                <option value="carousel">캐러셀</option>
+              </select>
+              <button className={styles.addSectionButton} type="button" onClick={handleAddSection}>
+                추가
+              </button>
+            </div>
           </div>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
-          <TextInputForm label="헤더(Header)" name={'pageJson.header'} register={register('pageJson.header')} />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
+            <TextInputForm label="헤더(Header)" name={'pageJson.header'} register={register('pageJson.header')} />
 
-          {contentsFields.map(field => {
-            const { label, registerName, placeholder, isArray } = getRegisterNameAndPlaceholder(
-              field.fieldType,
-              field.orderNo,
-            );
+            {contentsFields.map(field => {
+              const { label, registerName, placeholder, isArray } = getRegisterNameAndPlaceholder(
+                field.fieldType,
+                field.orderNo,
+              );
 
-            return (
-              <EventFormSection
-                key={field.id}
-                label={`${label} ${field.orderNo! + 1}`}
-                textInputName={registerName}
-                register={register(registerName as FormContentsRegisterNameType)}
-                styleFields={handleStyleFields(`pageJson.body.${field.orderNo}.style`)}
-                showStyleFields={showStyleFields[field.fieldType]}
-                toggleStyleFields={() => toggleStyleFields(field.fieldType)}
-                placeholder={placeholder}
-                orderNo={field.orderNo}
-                onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
-                maxOrderNo={contentsFields.length - 1}
-                isArray={isArray}
-              />
-            );
-          })}
-          <div className={styles.saveButtonContainer}>
-            <button type="submit" className={styles.addSectionButton}>
-              이벤트 등록
-            </button>
-          </div>
-        </form>
-      </section>
+              return (
+                <EventFormSection
+                  key={field.id}
+                  label={`${label} ${field.orderNo! + 1}`}
+                  textInputName={registerName}
+                  register={register(registerName as FormContentsRegisterNameType)}
+                  styleFields={handleStyleFields(`pageJson.body.${field.orderNo}.style`)}
+                  showStyleFields={showStyleFields[field.fieldType]}
+                  toggleStyleFields={() => toggleStyleFields(field.fieldType)}
+                  placeholder={placeholder}
+                  orderNo={field.orderNo}
+                  onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
+                  maxOrderNo={contentsFields.length - 1}
+                  isArray={isArray}
+                />
+              );
+            })}
+            <div className={styles.saveButtonContainer}>
+              <button type="submit" className={styles.addSectionButton}>
+                이벤트 등록
+              </button>
+            </div>
+          </form>
+        </section>
 
-      <section className={styles.section}>
-        <h2>Request Body</h2>
-        <pre>{JSON.stringify(formDataState, null, 2)}</pre>
-      </section>
-    </div>
+        <section className={styles.section}>
+          <PreviewDetail />
+          {/* <pre>{JSON.stringify(formDataState, null, 2)}</pre> */}
+        </section>
+      </div>
+    </FormProvider>
   );
 }
 

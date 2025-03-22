@@ -1,6 +1,8 @@
+'use client';
+
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import styles from './Carousel.module.scss';
+// import styles from './Carousel.module.scss';
 import { ReactElement } from 'react';
 
 interface CarouselProps {
