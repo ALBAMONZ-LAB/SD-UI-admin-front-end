@@ -27,6 +27,11 @@ export function Sidebar() {
               </Link>
             </li>
             <li className={styles.navItem}>
+              <Link href="/event/register" className={styles.navLink}>
+                이벤트 등록
+              </Link>
+            </li>
+            <li className={styles.navItem}>
               <Link href="/event-history" className={styles.navLink}>
                 이벤트 이력
               </Link>
