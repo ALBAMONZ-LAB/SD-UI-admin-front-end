@@ -1,16 +1,25 @@
 import Link from 'next/link';
 import ContentLayout from '@sd-ui-admin/layout/ContentLayout';
 
-export default function Event() {
+interface EventPage {
+  id: number;
+  eventTitle: string;
+}
+
+export default async function Event() {
+  // pagination 목록으로 바꿔야함
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const res = await fetch(`${baseUrl}/event-pages/all`, { cache: 'no-store' });
+  const events = await res.json();
+
   return (
     <ContentLayout title={'이벤트 목록'}>
       <ul>
-        <li>
-          <Link href={'/event/1'}>이벤트1 클릭</Link>
-        </li>
-        <li>
-          <Link href={'/event/2'}>이벤트2 클릭</Link>
-        </li>
+        {events.map((event: EventPage) => (
+          <li key={event.id}>
+            <Link href={`/event/${event.id}`}>{event.eventTitle}</Link>
+          </li>
+        ))}
       </ul>
     </ContentLayout>
   );
