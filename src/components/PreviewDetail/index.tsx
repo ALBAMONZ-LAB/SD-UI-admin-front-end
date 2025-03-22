@@ -10,7 +10,7 @@ import {
   Carousel,
   FloatingButton,
   Footer,
-} from '@sd-ui-admin/components';
+} from '@sd-ui-admin/components/DynamicComponents';
 
 const MAPPED_COMPONENTS = {
   TITLE: Title,
@@ -34,12 +34,18 @@ interface ComponentData {
   style?: Record<string, string>;
 }
 
+const fieldTypeToComponentType = (fieldType: string): keyof typeof MAPPED_COMPONENTS => {
+  return fieldType.toUpperCase() as keyof typeof MAPPED_COMPONENTS;
+};
+
 export const PreviewDetail = React.memo(function PreviewDetail() {
   const { control } = useFormContext<EventFormType>();
   const [eventTitle, pageJson] = useWatch({
     control,
     name: ['eventTitle', 'pageJson'],
   });
+
+  const body = pageJson?.body || [];
 
   return (
     <div>
@@ -49,9 +55,17 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
         {JSON.stringify(pageJson, null, 2)}
       </pre>
       <div>
-        {/* {eventList.getEventPageComponents.components.map((item, index) => (
-          <RenderComponent key={`${item.type}_${index}`} {...item} />
-        ))} */}
+        {Array.isArray(body) && body.length > 0 ? (
+          body.map((item, index) => (
+            <RenderComponent
+              key={`${item.fieldType}_${index}`}
+              {...item}
+              type={fieldTypeToComponentType(item.fieldType)}
+            />
+          ))
+        ) : (
+          <p>Empty here...</p>
+        )}
       </div>
     </div>
   );

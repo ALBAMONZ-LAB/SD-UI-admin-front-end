@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { IoMdArrowBack } from 'react-icons/io';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
@@ -11,12 +10,6 @@ export interface TitleProps {
 }
 
 export const Title = ({ text, fontSize, fontWeight, textAlign, color }: TitleProps) => {
-  const router = useRouter();
-
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <div
       style={{
@@ -27,7 +20,7 @@ export const Title = ({ text, fontSize, fontWeight, textAlign, color }: TitlePro
         justifyContent: 'space-between',
       }}
     >
-      <IoMdArrowBack size={24} style={{ marginLeft: 20, marginRight: 15, flexShrink: 0 }} onClick={handleBack} />
+      <IoMdArrowBack size={24} style={{ marginLeft: 20, marginRight: 15, flexShrink: 0 }} />
       <div style={{ width: '100%' }}>
         <h1
           style={{
