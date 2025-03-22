@@ -9,7 +9,15 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
     name: ['eventTitle', 'pageJson'],
   });
 
-  return <>{eventTitle}</>;
+  return (
+    <div>
+      <h2>페이지 미리보기</h2>
+      {eventTitle}
+      <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+        {JSON.stringify(pageJson, null, 2)}
+      </pre>
+    </div>
+  );
 });
 
 export default PreviewDetail;
