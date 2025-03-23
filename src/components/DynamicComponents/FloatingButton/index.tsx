@@ -1,5 +1,5 @@
 export interface FloatingButtonProps {
-  text: string;
+  text?: string;
   backgroundColor?: string;
   textColor?: string;
   width?: string | number;

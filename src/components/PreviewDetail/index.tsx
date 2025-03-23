@@ -29,8 +29,7 @@ interface ComponentData {
   type: keyof typeof MAPPED_COMPONENTS;
   orderNo: number;
   children?: ComponentData[];
-  text?: string;
-  contents?: {
+  contents: {
     text?: string;
     src?: string;
   };
@@ -55,9 +54,9 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
     <div>
       <h2>페이지 미리보기</h2>
       {eventTitle}
-      {/* <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+      <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
         {JSON.stringify(pageJson, null, 2)}
-      </pre> */}
+      </pre>
       <div>
         {Array.isArray(body) && body.length > 0 ? (
           body.map((item, index) => (
@@ -85,8 +84,10 @@ const RenderComponent = ({ type, style, orderNo, contents, children, ...data }: 
 
   const props = {
     ...data,
-    text: '',
-    src: contents?.src || '',
+    contents: {
+      text: contents?.text || '',
+      src: contents?.src || '',
+    },
     style: style,
   };
 
@@ -97,4 +98,26 @@ const RenderComponent = ({ type, style, orderNo, contents, children, ...data }: 
       ))}
     </Component>
   );
+};
+
+const getComponentProps = (data: ComponentData) => {
+  const common = {
+    style: data.style,
+    orderNo: data.orderNo,
+  };
+
+  switch (data.type) {
+    case 'BUTTON':
+      return {
+        ...common,
+        text: data.contents?.text,
+      };
+    case 'IMAGE':
+      return {
+        ...common,
+        src: data.contents?.src,
+      };
+    default:
+      return common;
+  }
 };
