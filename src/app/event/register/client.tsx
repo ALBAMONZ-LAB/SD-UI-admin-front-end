@@ -1,5 +1,6 @@
 'use client';
 
+import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/components';
 import { ADD_DEFAULT_BODY_DATA, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
 import {
@@ -11,9 +12,8 @@ import {
   StyleFormRegisterFieldType,
 } from '@sd-ui-admin/types';
 import { useCallback, useEffect, useState } from 'react';
-import { useFieldArray, useForm, FormProvider } from 'react-hook-form';
+import { FieldErrors, FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import * as styles from './index.css';
-import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 
 export function EventRegisterClient() {
   const [showStyleFields, setShowStyleFields] = useState<ShowStyleFieldsType>({
@@ -26,6 +26,7 @@ export function EventRegisterClient() {
   const { mutate } = usePostEventPage();
 
   const methods = useForm<EventFormType>({
+    mode: 'onSubmit',
     defaultValues: {
       eventTitle: '',
       pageJson: {
@@ -52,11 +53,40 @@ export function EventRegisterClient() {
   };
 
   const onSubmit = (formData: EventFormType) => {
+    if (!formData.pageJson?.body || formData.pageJson?.body.length < 1) {
+      alert('하나 이상의 콘텐츠가 필요합니다.');
+      return;
+    }
     const formDataWithStringPageJson = {
       ...formData,
       pageJson: JSON.stringify(formData.pageJson),
     };
-    mutate({ ...formDataWithStringPageJson, eventId: 2000 });
+    mutate({ ...formDataWithStringPageJson });
+  };
+
+  function findFirstErrorMessage(errors: FieldErrors): string | null {
+    for (const key in errors) {
+      const error = errors[key];
+      if (typeof error?.message === 'string') {
+        return error.message;
+      }
+
+      if (typeof error === 'object') {
+        const nestedMessage = findFirstErrorMessage(error as FieldErrors);
+        if (nestedMessage) {
+          return nestedMessage;
+        }
+      }
+    }
+    return null;
+  }
+
+  const onError = (errors: FieldErrors<EventFormType>) => {
+    // 첫 번째 에러 메시지만 alert 띄우기
+    const firstError = findFirstErrorMessage(errors);
+    if (firstError) {
+      alert(firstError);
+    }
   };
 
   const handleStyleFields = useCallback(
@@ -74,6 +104,8 @@ export function EventRegisterClient() {
     let registerName = `pageJson.body.${orderNo}.contents`;
     let placeholder;
     let isArray = false;
+    const requiredOption = { required: `${label} 콘텐츠에 내용은 필수입니다` };
+
     switch (fieldType) {
       case 'button':
         registerName += '.text';
@@ -93,7 +125,7 @@ export function EventRegisterClient() {
         placeholder = '입력';
         break;
     }
-    return { label, registerName, placeholder, isArray };
+    return { label, registerName, placeholder, isArray, requiredOption };
   }
 
   const handleAddSection = () => {
@@ -140,12 +172,20 @@ export function EventRegisterClient() {
               </button>
             </div>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TextInputForm label="이벤트 제목" name={'eventTitle'} register={register('eventTitle')} />
-            <TextInputForm label="헤더(Header)" name={'pageJson.header'} register={register('pageJson.header')} />
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <TextInputForm
+              label="이벤트 제목"
+              name={'eventTitle'}
+              register={register('eventTitle', { required: '이벤트 제목을 입력해주세요.' })}
+            />
+            <TextInputForm
+              label="헤더(Header)"
+              name={'pageJson.header'}
+              register={register('pageJson.header', { required: '헤더를 입력해 주세요.' })}
+            />
 
             {contentsFields.map(field => {
-              const { label, registerName, placeholder, isArray } = getRegisterNameAndPlaceholder(
+              const { label, registerName, placeholder, isArray, requiredOption } = getRegisterNameAndPlaceholder(
                 field.fieldType,
                 field.orderNo,
               );
@@ -155,7 +195,7 @@ export function EventRegisterClient() {
                   key={field.id}
                   label={`${label} ${field.orderNo! + 1}`}
                   textInputName={registerName}
-                  register={register(registerName as FormContentsRegisterNameType)}
+                  register={register(registerName as FormContentsRegisterNameType, { ...requiredOption })}
                   styleFields={handleStyleFields(`pageJson.body.${field.orderNo}.style`)}
                   showStyleFields={showStyleFields[field.fieldType]}
                   toggleStyleFields={() => toggleStyleFields(field.fieldType)}

@@ -46,7 +46,7 @@ export const Carousel = ({ ...props }: CarouselProps) => (
         slideShadows: false,
       }}
       modules={[Autoplay]}
-      className={styles.swiper}
+      // className={styles.swiper}
       speed={1000}
     >
       {props.children.map((item, idx) => (
