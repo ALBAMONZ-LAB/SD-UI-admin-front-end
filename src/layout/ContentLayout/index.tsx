@@ -1,4 +1,8 @@
 import { ReactNode } from 'react';
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import * as styles from './index.css';
 
 export interface ContentLayoutProps {
