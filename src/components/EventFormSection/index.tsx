@@ -1,8 +1,8 @@
-import { UseFormRegisterReturn } from 'react-hook-form';
-import TextInputForm from '@sd-ui-admin/components/TextInputForm';
 import StyleInputForm from '@sd-ui-admin/components/StyleInputForm';
-import * as styles from './index.css';
+import TextInputForm from '@sd-ui-admin/components/TextInputForm';
 import { StyleFormRegisterFieldType } from '@sd-ui-admin/types';
+import { UseFormRegisterReturn } from 'react-hook-form';
+import * as styles from './index.css';
 
 interface EventFormSectionProps {
   label: string;
@@ -14,6 +14,7 @@ interface EventFormSectionProps {
   placeholder?: string;
   orderNo: number;
   onOrderNoChange: (orderNo: number) => void;
+  onDelete: (orderNo: number) => void;
   maxOrderNo: number;
   isArray?: boolean;
 }
@@ -28,6 +29,7 @@ export function EventFormSection({
   placeholder,
   orderNo,
   onOrderNoChange,
+  onDelete,
   maxOrderNo,
   isArray = false,
 }: EventFormSectionProps) {
@@ -49,6 +51,9 @@ export function EventFormSection({
             </option>
           ))}
         </select>
+        <button type="button" className={styles.deleteButton} onClick={() => onDelete(orderNo)}>
+          삭제 X
+        </button>
       </div>
       {showStyleFields && styleFields && <StyleInputForm styleFields={styleFields} />}
     </div>

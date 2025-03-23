@@ -1,5 +1,5 @@
-import { axiosInstance } from '../axiosInstance';
 import { EventRequest } from '@sd-ui-admin/types';
+import { axiosInstance } from '../axiosInstance';
 // import { GET_EVENT_DETAIL_PAGE } from "@sd-ui-admin/api/event/event.queries";
 
 // export async function getEventPages() {
@@ -12,6 +12,6 @@ export const getEventDetailPage = async (eventId: number) => {
 };
 
 export const postEventPage = async (body: EventRequest) => {
-  const { data } = await axiosInstance.post('/event-pages/create', body);
+  const { data } = await axiosInstance.post('/event-pages', body);
   return data;
 };
