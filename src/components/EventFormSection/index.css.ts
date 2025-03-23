@@ -20,3 +20,14 @@ export const selectBox = style({
   marginBottom: '16px',
   flexShrink: 0,
 });
+
+export const deleteButton = style({
+  flexShrink: 0,
+  marginLeft: '8px',
+  fontSize: '13px',
+  color: '#858585',
+  background: 'transparent',
+  border: 'none',
+  cursor: 'pointer',
+  marginBottom: '24px',
+});

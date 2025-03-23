@@ -1,4 +1,4 @@
-import { PageJson } from "@sd-ui-admin/types/event";
+import { PageJson } from '@sd-ui-admin/types/event';
 
 export interface EventDetailResponse {
   id: number;
@@ -8,7 +8,6 @@ export interface EventDetailResponse {
   createdAt: string;
 }
 export interface EventRequest {
-  eventId: number;
   eventTitle: string;
   pageJson: string;
 }

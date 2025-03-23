@@ -1,6 +1,8 @@
+'use client';
+
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import styles from './Carousel.module.scss';
+// import styles from './Carousel.module.scss';
 import { ReactElement } from 'react';
 
 interface CarouselProps {
@@ -44,7 +46,7 @@ export const Carousel = ({ ...props }: CarouselProps) => (
         slideShadows: false,
       }}
       modules={[Autoplay]}
-      className={styles.swiper}
+      // className={styles.swiper}
       speed={1000}
     >
       {props.children.map((item, idx) => (
