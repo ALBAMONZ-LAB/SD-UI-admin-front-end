@@ -1,5 +1,5 @@
 export interface FooterProps {
-  text: string;
+  text?: string;
   backgroundColor?: string;
   color?: string;
   fontSize?: string | number;

@@ -1,44 +1,14 @@
 export interface ImageProps {
-  imageUrl: string;
-  backgroundColor?: string;
-  paddingTop?: string | number;
-  paddingBottom?: string | number;
-  paddingLeft?: string | number;
-  paddingRight?: string | number;
-  width?: string | number;
-  display?: 'flex' | 'block' | 'inline-block';
-  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around';
-  imageWidth?: string | number;
-  height?: string | number;
-  onClick?: () => void;
+  contents: { src: string };
+  style?: React.CSSProperties & {
+    imageWidth?: string | number;
+  };
 }
 
-export const Image = ({
-  imageUrl,
-  backgroundColor,
-  paddingTop,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-  width,
-  display,
-  justifyContent,
-  imageWidth,
-  height,
-}: ImageProps) => (
-  <div
-    style={{
-      backgroundColor,
-      paddingTop,
-      paddingBottom,
-      paddingLeft,
-      paddingRight,
-      height,
-      display,
-      justifyContent,
-      boxSizing: 'border-box',
-    }}
-  >
-    <img src={imageUrl} alt="example" style={{ width }} />
-  </div>
-);
+export const Image = ({ contents, style = {} }: ImageProps) => {
+  return (
+    <div style={{ ...style }}>
+      {contents.src && <img src={contents.src} alt="example" style={{ width: style?.imageWidth || '100%' }} />}
+    </div>
+  );
+};
