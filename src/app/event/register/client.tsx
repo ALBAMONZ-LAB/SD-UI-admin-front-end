@@ -39,7 +39,11 @@ export function EventRegisterClient() {
 
   const { register, handleSubmit, control, watch, setValue } = methods;
 
-  const { fields: contentsFields, append: appendContents } = useFieldArray({
+  const {
+    fields: contentsFields,
+    append: appendContents,
+    remove,
+  } = useFieldArray({
     control,
     name: 'pageJson.body',
   });
@@ -151,6 +155,22 @@ export function EventRegisterClient() {
     setValue('pageJson.body', updatedFields);
   };
 
+  const handleRemoveSection = (targetOrderNo: number) => {
+    if (!confirm('해당 콘텐츠를 삭제하시겠습니까?')) {
+      return;
+    }
+    const updatedFields = contentsFields
+      .filter(field => field.orderNo !== targetOrderNo)
+      .map(({ id, ...rest }) => rest)
+      .sort((a, b) => a.orderNo - b.orderNo)
+      .map((field, i) => ({
+        ...field,
+        orderNo: i,
+      }));
+
+    setValue('pageJson.body', updatedFields);
+  };
+
   return (
     <FormProvider {...methods}>
       <div className={styles.container}>
@@ -202,6 +222,7 @@ export function EventRegisterClient() {
                   placeholder={placeholder}
                   orderNo={field.orderNo}
                   onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
+                  onDelete={handleRemoveSection}
                   maxOrderNo={contentsFields.length - 1}
                   isArray={isArray}
                 />
@@ -217,7 +238,6 @@ export function EventRegisterClient() {
 
         <section className={styles.section}>
           <PreviewDetail />
-          {/* <pre>{JSON.stringify(formDataState, null, 2)}</pre> */}
         </section>
       </div>
     </FormProvider>
