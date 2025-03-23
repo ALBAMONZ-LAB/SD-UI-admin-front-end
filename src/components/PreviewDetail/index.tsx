@@ -12,6 +12,8 @@ import {
   Footer,
 } from '@sd-ui-admin/components/DynamicComponents';
 
+// header
+// event title... ?
 const MAPPED_COMPONENTS = {
   TITLE: Title,
   IMAGE_WITH_CHILDREN: ImageWithChildren,
@@ -25,15 +27,16 @@ const MAPPED_COMPONENTS = {
 
 interface ComponentData {
   type: keyof typeof MAPPED_COMPONENTS;
+  orderNo: number;
   children?: ComponentData[];
-  text?: string;
-  contents?: {
+  contents: {
     text?: string;
     src?: string;
   };
   style?: Record<string, string>;
 }
 
+//  TODO type 맞추기
 const fieldTypeToComponentType = (fieldType: string): keyof typeof MAPPED_COMPONENTS => {
   return fieldType.toUpperCase() as keyof typeof MAPPED_COMPONENTS;
 };
@@ -73,23 +76,48 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
 
 export default PreviewDetail;
 
-const RenderComponent = (data: ComponentData) => {
-  if (!data?.type) return null;
+const RenderComponent = ({ type, style, orderNo, contents, children, ...data }: ComponentData) => {
+  if (!type) return null;
 
-  const Component = MAPPED_COMPONENTS[data.type];
+  const Component = MAPPED_COMPONENTS[type];
   if (!Component) return null;
 
   const props = {
     ...data,
-    text: data.text || data.contents?.text || '',
-    imageUrl: data.contents?.src || '',
+    contents: {
+      text: contents?.text || '',
+      src: contents?.src || '',
+    },
+    style: style,
   };
 
   return (
     <Component {...props}>
-      {(data.children || []).map((child: ComponentData, index: number) => (
+      {(children || []).map((child: ComponentData, index: number) => (
         <RenderComponent key={`${child.type}_${index}`} {...child} />
       ))}
     </Component>
   );
+};
+
+const getComponentProps = (data: ComponentData) => {
+  const common = {
+    style: data.style,
+    orderNo: data.orderNo,
+  };
+
+  switch (data.type) {
+    case 'BUTTON':
+      return {
+        ...common,
+        text: data.contents?.text,
+      };
+    case 'IMAGE':
+      return {
+        ...common,
+        src: data.contents?.src,
+      };
+    default:
+      return common;
+  }
 };

@@ -2,7 +2,7 @@ import { IoMdArrowBack } from 'react-icons/io';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
 export interface TitleProps {
-  text: string;
+  text?: string;
   fontSize?: string | number;
   fontWeight?: string | number;
   textAlign?: 'left' | 'center' | 'right';
