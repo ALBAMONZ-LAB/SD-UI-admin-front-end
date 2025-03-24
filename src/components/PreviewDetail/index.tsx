@@ -51,12 +51,17 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
   const body = pageJson?.body || [];
 
   return (
-    <div>
+    <div
+      // TODO width 논의 필요
+      style={{
+        maxWidth: '600px',
+      }}
+    >
       <h2>페이지 미리보기</h2>
       {eventTitle}
-      <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+      {/* <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
         {JSON.stringify(pageJson, null, 2)}
-      </pre>
+      </pre> */}
       <div>
         {Array.isArray(body) && body.length > 0 ? (
           body.map((item, index) => (
@@ -76,20 +81,13 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
 
 export default PreviewDetail;
 
-const RenderComponent = ({ type, style, orderNo, contents, children, ...data }: ComponentData) => {
+const RenderComponent = ({ type, orderNo, children, ...data }: ComponentData) => {
   if (!type) return null;
 
   const Component = MAPPED_COMPONENTS[type];
   if (!Component) return null;
 
-  const props = {
-    ...data,
-    contents: {
-      text: contents?.text || '',
-      src: contents?.src || '',
-    },
-    style: style,
-  };
+  const props = getComponentProps({ type, orderNo, ...data });
 
   return (
     <Component {...props}>
@@ -104,9 +102,20 @@ const getComponentProps = (data: ComponentData) => {
   const common = {
     style: data.style,
     orderNo: data.orderNo,
+    contents: {
+      text: data.contents?.text || '',
+      src: data.contents?.src || '',
+    },
+    items: [],
   };
 
   switch (data.type) {
+    case 'CAROUSEL':
+      // TODO 이거 타입.. 이대로 할건지.. 여쭤보기 ..
+      return {
+        ...common,
+        items: data.contents?.src ? data.contents.src.split(',').map(url => url.trim()) : [],
+      };
     case 'BUTTON':
       return {
         ...common,
@@ -115,7 +124,7 @@ const getComponentProps = (data: ComponentData) => {
     case 'IMAGE':
       return {
         ...common,
-        src: data.contents?.src,
+        src: data.contents?.src || '',
       };
     default:
       return common;
