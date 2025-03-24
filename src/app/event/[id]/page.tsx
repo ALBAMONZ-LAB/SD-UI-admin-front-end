@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import ContentLayout from '@sd-ui-admin/layout/ContentLayout';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { getEventDetailPage } from '@sd-ui-admin/api/event/event.api';
+import EventDetailPageClient from "@sd-ui-admin/app/event/[id]/client";
 
 interface EventDetailPageProps {
   params?: Promise<{ id: string }>;
@@ -12,11 +14,20 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   if (!eventId || isNaN(eventId)) {
     return notFound();
   }
+  const queryClient = new QueryClient();
+  // 서버에서 prefetch
+  await queryClient.fetchQuery({
+    queryKey: ['event', eventId],
+    queryFn: () => getEventDetailPage(eventId),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <ContentLayout title={'이벤트 상세'}>
-      <Link href={`/event/register/${eventId}`}>수정하기</Link>
-      <div>/event/register 등록페이지 작업 후 작업예정</div>
+      <HydrationBoundary state={dehydratedState}>
+        <EventDetailPageClient eventId={eventId}/>
+      </HydrationBoundary>
     </ContentLayout>
   );
 }

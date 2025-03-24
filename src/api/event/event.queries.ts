@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from '@tanstack/react-query';
-import { getEventDetailPage, postEventPage } from '@sd-ui-admin/api/event/event.api';
+import { getEventDetailPage, patchEventPage, postEventPage } from '@sd-ui-admin/api/event/event.api';
 import { EventDetailResponse, EventRequest } from '@sd-ui-admin/types';
 
 // export const GET_EVENT_DETAIL_PAGE = gql`
@@ -29,7 +29,19 @@ export const usePostEventPage = (): UseMutationResult<any, any, EventRequest, un
     onSuccess: () => {
       alert('이벤트 등록에 성공 하였습니다.');
     },
-    onError: (error) => {
+    onError: error => {
+      alert(`Failed to post event page: ${error.message}`);
+    },
+  });
+};
+
+export const usePatchEventPage = (): UseMutationResult<any, any, { eventId: number; body: EventRequest }, unknown> => {
+  return useMutation({
+    mutationFn: ({ eventId, body }) => patchEventPage(eventId, body),
+    onSuccess: () => {
+      alert('이벤트 수정에 성공 하였습니다.');
+    },
+    onError: error => {
       alert(`Failed to post event page: ${error.message}`);
     },
   });

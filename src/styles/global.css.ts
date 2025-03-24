@@ -27,6 +27,8 @@ globalStyle('ul, ol', {
 globalStyle('button', {
   all: 'unset',
   cursor: 'pointer',
+  textAlign: 'center',
+  opacity: 1,
 });
 
 globalStyle('input, textarea', {
