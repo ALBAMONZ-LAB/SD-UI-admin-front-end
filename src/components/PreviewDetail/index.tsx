@@ -13,7 +13,7 @@ import {
 } from '@sd-ui-admin/components/DynamicComponents';
 
 interface PreviewDetailProps {
-  defaultBackground: string;
+  eventBackground?: string;
 }
 
 // header
@@ -42,7 +42,7 @@ const fieldTypeToComponentType = (sectionType: string): keyof typeof MAPPED_COMP
   return sectionType.toUpperCase() as keyof typeof MAPPED_COMPONENTS;
 };
 
-export const PreviewDetail = React.memo(function PreviewDetail({ defaultBackground }: PreviewDetailProps) {
+export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground }: PreviewDetailProps) {
   const { control } = useFormContext<EventFormType>();
   const [eventTitle, pageJson] = useWatch({
     control,
@@ -72,7 +72,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ defaultBackgrou
         <header>
           <h3 style={{ margin: '0', padding: '20px',background:'#ffffff' }}>{pageJson.header}</h3>
         </header>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: defaultBackground }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: eventBackground }}>
           {Array.isArray(body) && body.length > 0 ? (
             body.map((item, index) => (
               <RenderComponent
@@ -93,7 +93,6 @@ export const PreviewDetail = React.memo(function PreviewDetail({ defaultBackgrou
 export default PreviewDetail;
 
 const RenderComponent = ({ type, orderNo, children, ...data }: ComponentData) => {
-  console.log(data);
   if (!type) return null;
 
   const Component = MAPPED_COMPONENTS[type];

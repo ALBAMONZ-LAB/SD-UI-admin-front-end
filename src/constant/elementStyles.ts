@@ -1,10 +1,10 @@
 import { PageBodyType, PageJsonBodyItemType, StyleConfig } from '@sd-ui-admin/types';
 
 export const DEFAULT_BUTTON_STYLE: StyleConfig = {
-  padding: '10px',
+  padding: '0',
   margin: '0',
-  background: '#f10b',
-  width: '100%',
+  background: '#ff501b',
+  width: '80%',
   height: '48px',
   fontSize: '16px',
   border: 'none',
