@@ -18,7 +18,7 @@ export const addSection = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  marginBottom: '20px',
+  marginBottom: '32px',
 });
 
 export const addSectionField = style({
