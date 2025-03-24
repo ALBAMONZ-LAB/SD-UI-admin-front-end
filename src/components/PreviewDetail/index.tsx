@@ -1,4 +1,4 @@
-import { EventFormType } from '@sd-ui-admin/types';
+import { EventFormType, PageJsonContentsItem } from "@sd-ui-admin/types";
 import { useFormContext, useWatch } from 'react-hook-form';
 import React from 'react';
 import {
@@ -29,16 +29,13 @@ interface ComponentData {
   type: keyof typeof MAPPED_COMPONENTS;
   orderNo: number;
   children?: ComponentData[];
-  contents: {
-    text?: string;
-    src?: string;
-  };
+  contents: PageJsonContentsItem;
   style?: Record<string, string>;
 }
 
 //  TODO type 맞추기
-const fieldTypeToComponentType = (fieldType: string): keyof typeof MAPPED_COMPONENTS => {
-  return fieldType.toUpperCase() as keyof typeof MAPPED_COMPONENTS;
+const fieldTypeToComponentType = (sectionType: string): keyof typeof MAPPED_COMPONENTS => {
+  return sectionType.toUpperCase() as keyof typeof MAPPED_COMPONENTS;
 };
 
 export const PreviewDetail = React.memo(function PreviewDetail() {
@@ -66,9 +63,9 @@ export const PreviewDetail = React.memo(function PreviewDetail() {
         {Array.isArray(body) && body.length > 0 ? (
           body.map((item, index) => (
             <RenderComponent
-              key={`${item.fieldType}_${index}`}
+              key={`${item.sectionType}_${index}`}
               {...item}
-              type={fieldTypeToComponentType(item.fieldType)}
+              type={fieldTypeToComponentType(item.sectionType)}
             />
           ))
         ) : (
@@ -100,7 +97,7 @@ const RenderComponent = ({ type, orderNo, children, ...data }: ComponentData) =>
 
 const getComponentProps = (data: ComponentData) => {
   const common = {
-    style: data.style,
+    style: data.contents?.style,
     orderNo: data.orderNo,
     contents: {
       text: data.contents?.text || '',

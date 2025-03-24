@@ -1,8 +1,14 @@
 import { style } from '@vanilla-extract/css';
 
+export const header = style({
+  fontSize: '16px',
+  fontWeight: 'bold',
+  marginBottom: '16px',
+})
+
 export const styleGrid = style({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
   gap: '1rem',
   backgroundColor: '#e0e3e6', // Darker background color
   padding: '1rem',
@@ -15,7 +21,7 @@ export const styleGrid = style({
 export const styleInput = style({
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-start',
+  justifyContent: 'space-between',
   gap: '8px'
 });
 
