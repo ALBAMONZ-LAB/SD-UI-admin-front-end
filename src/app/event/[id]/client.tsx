@@ -1,6 +1,6 @@
 'use client';
 
-import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
+import { useGetEventPage, usePatchEventPage, usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/components';
 import { ADD_DEFAULT_BODY_DATA, DEFAULT_SECTION_STYLE, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
 import {
@@ -15,12 +15,16 @@ import { useEffect, useState } from 'react';
 import { FieldErrors, FormProvider, useFieldArray, useForm, UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
 
-export function EventRegisterClient() {
+interface EventDetailPageClientProps {
+  eventId: number;
+}
+
+export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
   const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
-  const [formDataState, setFormDataState] = useState<EventFormType>();
+  const { data, isLoading, error } = useGetEventPage(eventId);
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
-  const [eventBackground, setEventBackground] = useState('#ffffff');
-  const { mutate } = usePostEventPage();
+  const [eventBackground, setEventBackground] = useState('');
+  const { mutate } = usePatchEventPage();
 
   const methods = useForm<EventFormType>({
     mode: 'onSubmit',
@@ -34,7 +38,7 @@ export function EventRegisterClient() {
     },
   });
 
-  const { register, handleSubmit, control, watch, setValue } = methods;
+  const { register, handleSubmit, control, setValue, reset, watch } = methods;
 
   const { fields: contentsFields, append: appendContents } = useFieldArray({
     control,
@@ -42,8 +46,11 @@ export function EventRegisterClient() {
   });
 
   useEffect(() => {
-    setFormDataState(watch());
-  }, [watch]);
+    if (data) {
+      setEventBackground((data.pageJson.body![0].sectionStyle.background as string));
+      reset(data);
+    }
+  }, [data, reset]);
 
   const toggleStyleFields = (orderNo: number) => {
     setShowStyleFields(prev => ({
@@ -61,7 +68,7 @@ export function EventRegisterClient() {
       ...formData,
       pageJson: JSON.stringify(formData.pageJson),
     };
-    mutate({ ...formDataWithStringPageJson });
+    mutate({ eventId, body: formDataWithStringPageJson });
   };
 
   function findFirstErrorMessage(errors: FieldErrors): string | null {
@@ -265,7 +272,7 @@ export function EventRegisterClient() {
             })}
             <div className={styles.saveButtonContainer}>
               <button type="submit" className={styles.addSectionButton}>
-                이벤트 등록
+                이벤트 수정
               </button>
             </div>
           </form>
@@ -279,4 +286,4 @@ export function EventRegisterClient() {
   );
 }
 
-export default EventRegisterClient;
+export default EventDetailPageClient;
