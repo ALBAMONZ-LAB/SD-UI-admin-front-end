@@ -2,25 +2,21 @@
 
 import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/components';
-import { ADD_DEFAULT_BODY_DATA, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
+import { ADD_DEFAULT_BODY_DATA, DEFAULT_SECTION_STYLE, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
 import {
+  ContentsStyleRegisterType,
   EventFormType,
   FormContentsRegisterNameType,
-  FormStyleRegisterType,
   PageJsonBodyItemType,
-  ShowStyleFieldsType,
-  StyleFormRegisterFieldType,
+  SectionStyleRegisterType,
+  StyleConfig,
 } from '@sd-ui-admin/types';
-import { useCallback, useEffect, useState } from 'react';
-import { FieldErrors, FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { FieldErrors, FormProvider, useFieldArray, useForm, UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
 
 export function EventRegisterClient() {
-  const [showStyleFields, setShowStyleFields] = useState<ShowStyleFieldsType>({
-    image: false,
-    button: false,
-    carousel: false,
-  });
+  const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
   const [formDataState, setFormDataState] = useState<EventFormType>();
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
   const { mutate } = usePostEventPage();
@@ -39,11 +35,7 @@ export function EventRegisterClient() {
 
   const { register, handleSubmit, control, watch, setValue } = methods;
 
-  const {
-    fields: contentsFields,
-    append: appendContents,
-    remove,
-  } = useFieldArray({
+  const { fields: contentsFields, append: appendContents } = useFieldArray({
     control,
     name: 'pageJson.body',
   });
@@ -52,8 +44,11 @@ export function EventRegisterClient() {
     setFormDataState(watch());
   }, [watch]);
 
-  const toggleStyleFields = (field: PageJsonBodyItemType) => {
-    setShowStyleFields(prev => ({ ...prev, [field]: !prev[field] }));
+  const toggleStyleFields = (orderNo: number) => {
+    setShowStyleFields(prev => ({
+      ...prev,
+      [orderNo]: !prev[orderNo],
+    }));
   };
 
   const onSubmit = (formData: EventFormType) => {
@@ -93,24 +88,33 @@ export function EventRegisterClient() {
     }
   };
 
-  const handleStyleFields = useCallback(
-    (fieldPrefix: FormStyleRegisterType) => {
-      return Object.keys(DEFAULT_STYLE).reduce((acc, styleKey) => {
-        acc[styleKey as FormStyleRegisterType] = register(`${fieldPrefix}.${styleKey}` as FormStyleRegisterType);
+  function createStyleFieldRegister<T extends ContentsStyleRegisterType | SectionStyleRegisterType>(
+    fieldPrefix: T,
+    defaultStyleObj: Partial<StyleConfig>,
+  ): Record<T, UseFormRegisterReturn> {
+    return Object.keys(defaultStyleObj).reduce(
+      (acc, styleKey) => {
+        acc[styleKey as T] = register(`${fieldPrefix}.${styleKey}` as T);
         return acc;
-      }, {} as StyleFormRegisterFieldType);
-    },
-    [register],
-  );
+      },
+      {} as Record<T, UseFormRegisterReturn>,
+    );
+  }
 
-  function getRegisterNameAndPlaceholder(fieldType: PageJsonBodyItemType, orderNo: number) {
-    const label = FORM_FIELD_TITLE[fieldType];
+  const handleStyleFields = (fieldPrefix: ContentsStyleRegisterType) =>
+    createStyleFieldRegister<ContentsStyleRegisterType>(fieldPrefix, DEFAULT_STYLE);
+
+  const handleSectionStyleFields = (fieldPrefix: SectionStyleRegisterType) =>
+    createStyleFieldRegister<SectionStyleRegisterType>(fieldPrefix, DEFAULT_SECTION_STYLE);
+
+  function getRegisterNameAndPlaceholder(sectionType: PageJsonBodyItemType, orderNo: number) {
+    const label = FORM_FIELD_TITLE[sectionType];
     let registerName = `pageJson.body.${orderNo}.contents`;
     let placeholder;
     let isArray = false;
     const requiredOption = { required: `${label} 콘텐츠에 내용은 필수입니다` };
 
-    switch (fieldType) {
+    switch (sectionType) {
       case 'button':
         registerName += '.text';
         placeholder = '서비스 시작';
@@ -167,7 +171,7 @@ export function EventRegisterClient() {
         ...field,
         orderNo: i,
       }));
-
+    setShowStyleFields([]);
     setValue('pageJson.body', updatedFields);
   };
 
@@ -206,7 +210,7 @@ export function EventRegisterClient() {
 
             {contentsFields.map(field => {
               const { label, registerName, placeholder, isArray, requiredOption } = getRegisterNameAndPlaceholder(
-                field.fieldType,
+                field.sectionType,
                 field.orderNo,
               );
 
@@ -216,9 +220,10 @@ export function EventRegisterClient() {
                   label={`${label} ${field.orderNo! + 1}`}
                   textInputName={registerName}
                   register={register(registerName as FormContentsRegisterNameType, { ...requiredOption })}
-                  styleFields={handleStyleFields(`pageJson.body.${field.orderNo}.style`)}
-                  showStyleFields={showStyleFields[field.fieldType]}
-                  toggleStyleFields={() => toggleStyleFields(field.fieldType)}
+                  sectionStyleFields={handleSectionStyleFields(`pageJson.body.${field.orderNo}.sectionStyle`)}
+                  contentsStyleFields={handleStyleFields(`pageJson.body.${field.orderNo}.contents.style`)}
+                  showStyleFields={showStyleFields[field.orderNo]}
+                  toggleStyleFields={() => toggleStyleFields(field.orderNo)}
                   placeholder={placeholder}
                   orderNo={field.orderNo}
                   onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
@@ -237,6 +242,9 @@ export function EventRegisterClient() {
         </section>
 
         <section className={styles.section}>
+          <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+            {JSON.stringify(formDataState, null, 2)}
+          </pre>
           <PreviewDetail />
         </section>
       </div>

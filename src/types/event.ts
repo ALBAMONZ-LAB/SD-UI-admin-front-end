@@ -1,31 +1,42 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 
-export type StyleType = 'padding' | 'margin' | 'background' | 'fontSize' | 'border' | 'borderRadius' | 'color';
 export type PageJsonBodyItemType = 'image' | 'button' | 'carousel';
-export type StyleConfig = Record<StyleType, string>;
-export type FormStyleRegisterType = `pageJson.body.${number}.style`;
+export type SectionStyleRegisterType = `pageJson.body.${number}.sectionStyle`;
+export type ContentsStyleRegisterType = `pageJson.body.${number}.contents.style`;
 export type FormContentsRegisterNameType = `pageJson.body.${number}.contents.${string}`;
-export type StyleFormRegisterFieldType = Record<FormStyleRegisterType, UseFormRegisterReturn>;
-export type ShowStyleFieldsType = Record<PageJsonBodyItemType, boolean>;
+export type SectionStyleFormType = Record<SectionStyleRegisterType, UseFormRegisterReturn>;
+export type ContentsStyleFormType = Record<ContentsStyleRegisterType, UseFormRegisterReturn>;
 
 export interface IconType {
   iconName: string;
   size: number;
 }
 
+export interface StyleConfig {
+  padding: string;
+  margin: string;
+  background: string;
+  fontSize: string;
+  border: string;
+  borderRadius: string;
+  color: string;
+  display: string;
+}
+
 export interface PageJsonContentsItem {
   src?: string;
   text?: string;
   icon?: IconType;
+  style: StyleConfig;
 
   [key: string]: unknown;
 }
 
 export interface PageBodyType {
-  fieldType: PageJsonBodyItemType;
+  sectionType: PageJsonBodyItemType;
+  sectionStyle: Partial<StyleConfig>;
   orderNo: number;
   contents: PageJsonContentsItem;
-  style: StyleConfig;
 }
 
 export interface PageJson {

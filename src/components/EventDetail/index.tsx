@@ -9,7 +9,7 @@
 //   ImageConfig,
 //   PageJsonBodyItemType,
 //   StyleConfig,
-//   StyleFormRegisterFieldType,
+//   ContentsStyleFormType,
 //   StyleType,
 //   EventDetailResponse
 // } from '@sd-ui-admin/types';
@@ -87,7 +87,7 @@
 //     return Object.keys(defaultStyle).reduce((acc, styleKey) => {
 //       acc[styleKey as PageJsonBodyItemType] = register(`${fieldPrefix}.style.${styleKey as StyleType}`);
 //       return acc;
-//     }, {} as StyleFormRegisterFieldType);
+//     }, {} as ContentsStyleFormType);
 //   };
 //
 //   if (isLoading || !data) {
@@ -117,7 +117,7 @@
 //             label="이미지(Image)"
 //             textInputName="image.src"
 //             register={register('image.src')}
-//             styleFields={handleStyleFields('image')}
+//             contentsStyleFields={handleStyleFields('image')}
 //             showStyleFields={showStyleFields['image']}
 //             toggleStyleFields={() => toggleStyleFields('image')}
 //           />
@@ -126,7 +126,7 @@
 //             label="버튼(Button)"
 //             textInputName="button.text"
 //             register={register('button.text')}
-//             styleFields={handleStyleFields('button')}
+//             contentsStyleFields={handleStyleFields('button')}
 //             showStyleFields={showStyleFields['button']}
 //             toggleStyleFields={() => toggleStyleFields('button')}
 //           />
@@ -135,7 +135,7 @@
 //             label="swiper(Carousel)"
 //             textInputName="carousel.src"
 //             register={register('carousel.src')}
-//             styleFields={handleStyleFields('carousel')}
+//             contentsStyleFields={handleStyleFields('carousel')}
 //             showStyleFields={showStyleFields['carousel']}
 //             toggleStyleFields={() => toggleStyleFields('carousel')}
 //           />

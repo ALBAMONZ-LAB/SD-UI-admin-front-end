@@ -1,16 +1,17 @@
 import StyleInputForm from '@sd-ui-admin/components/StyleInputForm';
 import TextInputForm from '@sd-ui-admin/components/TextInputForm';
-import { StyleFormRegisterFieldType } from '@sd-ui-admin/types';
+import { ContentsStyleFormType, SectionStyleFormType } from '@sd-ui-admin/types';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
 
 interface EventFormSectionProps {
   label: string;
   textInputName: string;
-  styleFields?: StyleFormRegisterFieldType;
+  sectionStyleFields: SectionStyleFormType;
+  contentsStyleFields: ContentsStyleFormType;
   register: UseFormRegisterReturn;
   showStyleFields: boolean;
-  toggleStyleFields: () => void;
+  toggleStyleFields: (orderNo: number) => void;
   placeholder?: string;
   orderNo: number;
   onOrderNoChange: (orderNo: number) => void;
@@ -22,7 +23,8 @@ interface EventFormSectionProps {
 export function EventFormSection({
   label,
   textInputName,
-  styleFields,
+  sectionStyleFields,
+  contentsStyleFields,
   register,
   showStyleFields,
   toggleStyleFields,
@@ -40,7 +42,7 @@ export function EventFormSection({
           label={label}
           name={textInputName}
           register={register}
-          onButtonClick={toggleStyleFields}
+          onButtonClick={() => toggleStyleFields(orderNo)}
           placeholder={placeholder}
           isArray={isArray}
         />
@@ -55,7 +57,9 @@ export function EventFormSection({
           삭제 X
         </button>
       </div>
-      {showStyleFields && styleFields && <StyleInputForm styleFields={styleFields} />}
+      {showStyleFields && (
+        <StyleInputForm contentsStyleFields={contentsStyleFields} sectionStyleFields={sectionStyleFields} />
+      )}
     </div>
   );
 }
