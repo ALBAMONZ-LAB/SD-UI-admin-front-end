@@ -16,6 +16,8 @@ export interface StyleConfig {
   padding: string;
   margin: string;
   background: string;
+  width: string;
+  height: string
   fontSize: string;
   border: string;
   borderRadius: string;

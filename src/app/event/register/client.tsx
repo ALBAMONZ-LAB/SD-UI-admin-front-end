@@ -19,6 +19,7 @@ export function EventRegisterClient() {
   const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
   const [formDataState, setFormDataState] = useState<EventFormType>();
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
+  const [defaultBackground, setDefaultBackground] = useState('#ffffff');
   const { mutate } = usePostEventPage();
 
   const methods = useForm<EventFormType>({
@@ -138,7 +139,14 @@ export function EventRegisterClient() {
 
   const handleAddSection = () => {
     const nextOrderNo = Math.max(...contentsFields.map(f => f.orderNo ?? -1), -1) + 1;
-    appendContents({ orderNo: nextOrderNo, ...ADD_DEFAULT_BODY_DATA[selectedSection] });
+    appendContents({
+      orderNo: nextOrderNo,
+      ...ADD_DEFAULT_BODY_DATA[selectedSection],
+      sectionStyle: {
+        ...ADD_DEFAULT_BODY_DATA[selectedSection].sectionStyle,
+        background: defaultBackground,
+      },
+    });
   };
 
   const handleOrderNoChange = (currentOrderNo: number, newOrderNo: number) => {
@@ -156,6 +164,14 @@ export function EventRegisterClient() {
     });
 
     updatedFields.sort((a, b) => a.orderNo - b.orderNo);
+    setValue('pageJson.body', updatedFields);
+  };
+
+  const handleBackgroundChange = () => {
+    const updatedFields = contentsFields.map(({ id, ...field }) => ({
+      ...field,
+      sectionStyle: { ...field.sectionStyle, background: defaultBackground },
+    }));
     setValue('pageJson.body', updatedFields);
   };
 
@@ -179,7 +195,7 @@ export function EventRegisterClient() {
     <FormProvider {...methods}>
       <div className={styles.container}>
         <section className={styles.section}>
-          <div className={styles.addSection}>
+          <div className={styles.addSection} style={{ marginBottom: '0' }}>
             <h3>콘텐츠 추가</h3>
             <div className={styles.addSectionField}>
               <select
@@ -193,6 +209,20 @@ export function EventRegisterClient() {
               </select>
               <button className={styles.addSectionButton} type="button" onClick={handleAddSection}>
                 추가
+              </button>
+            </div>
+          </div>
+          <div className={styles.addSection}>
+            <h3 style={{ margin: '0' }}>배경 색</h3>
+            <div className={styles.addSectionField}>
+              <input
+                type={'color'}
+                style={{ height: '39px', background: '#fff' }}
+                value={defaultBackground}
+                onChange={e => setDefaultBackground(e.target.value)}
+              />
+              <button className={styles.addSectionButton} type="button" onClick={handleBackgroundChange}>
+                전체 섹션 적용
               </button>
             </div>
           </div>
@@ -242,10 +272,10 @@ export function EventRegisterClient() {
         </section>
 
         <section className={styles.section}>
-          <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
-            {JSON.stringify(formDataState, null, 2)}
-          </pre>
-          <PreviewDetail />
+          {/*<pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>*/}
+          {/*  {JSON.stringify(formDataState, null, 2)}*/}
+          {/*</pre>*/}
+          <PreviewDetail defaultBackground={defaultBackground} />
         </section>
       </div>
     </FormProvider>

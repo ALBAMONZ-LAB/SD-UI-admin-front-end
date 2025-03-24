@@ -23,6 +23,14 @@ export const useGetEventPage = (eventId: number): UseQueryResult<EventDetailResp
   return useQuery({ queryKey: ['event', eventId], queryFn: () => getEventDetailPage(eventId) });
 };
 
-export const usePostEventPage = (): UseMutationResult<any, unknown, EventRequest, unknown> => {
-  return useMutation({ mutationFn: (body: EventRequest) => postEventPage(body) });
+export const usePostEventPage = (): UseMutationResult<any, any, EventRequest, unknown> => {
+  return useMutation({
+    mutationFn: (body: EventRequest) => postEventPage(body),
+    onSuccess: () => {
+      alert('이벤트 등록에 성공 하였습니다.');
+    },
+    onError: (error) => {
+      alert(`Failed to post event page: ${error.message}`);
+    },
+  });
 };
