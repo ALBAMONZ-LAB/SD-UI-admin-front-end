@@ -6,3 +6,4 @@ export * from './Group';
 export * from './Image';
 export * from './ImageWithChildren';
 export * from './Header';
+export * from './CustomizedComponent';

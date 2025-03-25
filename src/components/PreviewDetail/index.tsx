@@ -14,13 +14,13 @@ import {
   FooterProps,
   ButtonProps,
   FloatingButtonProps,
+  CustomizedComponent,
 } from '@sd-ui-admin/components/DynamicComponents';
 
 interface PreviewDetailProps {
   eventBackground?: string;
 }
 
-// event title... ?
 const MAPPED_COMPONENTS = {
   HEADER: Header,
   IMAGE: Image,
@@ -28,6 +28,7 @@ const MAPPED_COMPONENTS = {
   CAROUSEL: Carousel,
   FLOATINGBUTTON: FloatingButton,
   FOOTER: Footer,
+  CUSTOM: CustomizedComponent,
 };
 
 type ComponentPropsMap = {
@@ -74,9 +75,9 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
     >
       <h2>페이지 미리보기</h2>
       {eventTitle}
-      {/* <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+      <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
         {JSON.stringify(pageJson, null, 2)}
-      </pre> */}
+      </pre>
       <div
         style={{
           width: '360px',
