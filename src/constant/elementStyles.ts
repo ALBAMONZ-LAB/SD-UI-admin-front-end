@@ -52,10 +52,21 @@ export const DEFAULT_FOOTER_STYLE: StyleConfig = {
 };
 
 export const DEFAULT_SECTION_STYLE: Partial<StyleConfig> = {
-  padding: '0',
+  padding: '0 20px',
   margin: '0',
+  width: '100%',
   background: 'transparent',
-  display: 'block',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+export const DEFAULT_FIXED_SECTION_STYLE: Partial<StyleConfig> = {
+  ...DEFAULT_SECTION_STYLE,
+  position: 'fixed',
+  bottom: '20px',
+  left: '0',
+  zIndex: '1000',
 };
 
 export const DEFAULT_STYLE: StyleConfig = {
@@ -86,10 +97,22 @@ export const ADD_DEFAULT_BODY_DATA: Record<PageJsonBodyItemType, Omit<PageBodyTy
     sectionStyle: DEFAULT_SECTION_STYLE,
     sectionType: 'carousel',
   },
+  floatingButton: {
+    contents: { text: '', style: DEFAULT_BUTTON_STYLE },
+    sectionStyle: DEFAULT_FIXED_SECTION_STYLE,
+    sectionType: 'floatingButton',
+  },
+  custom: {
+    contents: { style: DEFAULT_STYLE },
+    sectionStyle: DEFAULT_SECTION_STYLE,
+    sectionType: 'custom',
+  }
 };
 
-export const FORM_FIELD_TITLE = {
+export const FORM_FIELD_TITLE: Record<PageJsonBodyItemType, string> = {
   image: '이미지(Image)',
   button: '버튼(Button)',
   carousel: '캐러셀(Carousel)',
-} as const;
+  floatingButton: '플로팅 버튼(Floating Button)',
+  custom: '커스텀(Custom)',
+};

@@ -1,6 +1,6 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 
-export type PageJsonBodyItemType = 'image' | 'button' | 'carousel';
+export type PageJsonBodyItemType = 'image' | 'button' | 'carousel' | 'floatingButton' | 'custom';
 export type SectionStyleRegisterType = `pageJson.body.${number}.sectionStyle`;
 export type ContentsStyleRegisterType = `pageJson.body.${number}.contents.style`;
 export type FormContentsRegisterNameType = `pageJson.body.${number}.contents.${string}`;
@@ -17,12 +17,14 @@ export interface StyleConfig {
   margin: string;
   background: string;
   width: string;
-  height: string
+  height: string;
   fontSize: string;
   border: string;
   borderRadius: string;
   color: string;
   display: string;
+
+  [key: string]: string;
 }
 
 export interface PageJsonContentsItem {
@@ -44,7 +46,7 @@ export interface PageBodyType {
 export interface PageJson {
   header: string;
   body?: PageBodyType[];
-  footer: Omit<PageBodyType, 'orderNo'>;
+  footer?: Omit<PageBodyType, 'orderNo'>;
 }
 
 export interface EventFormType {

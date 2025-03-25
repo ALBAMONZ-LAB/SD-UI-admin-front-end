@@ -2,7 +2,13 @@
 
 import { usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/components';
-import { ADD_DEFAULT_BODY_DATA, DEFAULT_SECTION_STYLE, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
+import {
+  ADD_DEFAULT_BODY_DATA,
+  DEFAULT_FIXED_SECTION_STYLE,
+  DEFAULT_SECTION_STYLE,
+  DEFAULT_STYLE,
+  FORM_FIELD_TITLE,
+} from '@sd-ui-admin/constant';
 import {
   ContentsStyleRegisterType,
   EventFormType,
@@ -105,10 +111,13 @@ export function EventRegisterClient() {
   const handleStyleFields = (fieldPrefix: ContentsStyleRegisterType) =>
     createStyleFieldRegister<ContentsStyleRegisterType>(fieldPrefix, DEFAULT_STYLE);
 
-  const handleSectionStyleFields = (fieldPrefix: SectionStyleRegisterType) =>
-    createStyleFieldRegister<SectionStyleRegisterType>(fieldPrefix, DEFAULT_SECTION_STYLE);
+  const handleSectionStyleFields = (fieldPrefix: SectionStyleRegisterType, sectionType: PageJsonBodyItemType) =>
+    createStyleFieldRegister<SectionStyleRegisterType>(
+      fieldPrefix,
+      sectionType === 'floatingButton' ? DEFAULT_FIXED_SECTION_STYLE : DEFAULT_SECTION_STYLE,
+    );
 
-  function getRegisterNameAndPlaceholder(sectionType: PageJsonBodyItemType, orderNo: number) {
+  function getEventBodyFormData(sectionType: PageJsonBodyItemType, orderNo: number) {
     const label = FORM_FIELD_TITLE[sectionType];
     let registerName = `pageJson.body.${orderNo}.contents`;
     let placeholder;
@@ -116,9 +125,10 @@ export function EventRegisterClient() {
     const requiredOption = { required: `${label} 콘텐츠에 내용은 필수입니다` };
 
     switch (sectionType) {
+      case 'floatingButton':
       case 'button':
         registerName += '.text';
-        placeholder = '서비스 시작';
+        placeholder = '버튼이름';
         break;
       case 'carousel':
         registerName += '.src';
@@ -131,7 +141,7 @@ export function EventRegisterClient() {
         break;
       default:
         registerName += '.text';
-        placeholder = '입력';
+        placeholder = '';
         break;
     }
     return { label, registerName, placeholder, isArray, requiredOption };
@@ -144,7 +154,7 @@ export function EventRegisterClient() {
       ...ADD_DEFAULT_BODY_DATA[selectedSection],
       sectionStyle: {
         ...ADD_DEFAULT_BODY_DATA[selectedSection].sectionStyle,
-        background: eventBackground,
+        background: selectedSection === 'floatingButton' ? 'transparent' : eventBackground,
       },
     });
   };
@@ -170,7 +180,7 @@ export function EventRegisterClient() {
   const handleBackgroundChange = () => {
     const updatedFields = contentsFields.map(({ id, ...field }) => ({
       ...field,
-      sectionStyle: { ...field.sectionStyle, background: eventBackground },
+      sectionStyle: { ...field.sectionStyle, background: field.sectionType ==='floatingButton'? 'transparent' :eventBackground },
     }));
     setValue('pageJson.body', updatedFields);
   };
@@ -206,6 +216,8 @@ export function EventRegisterClient() {
                 <option value="image">이미지</option>
                 <option value="button">버튼</option>
                 <option value="carousel">캐러셀</option>
+                <option value="floatingButton">플로팅 버튼</option>
+                <option value="custom">커스텀</option>
               </select>
               <button className={styles.addSectionButton} type="button" onClick={handleAddSection}>
                 추가
@@ -239,7 +251,7 @@ export function EventRegisterClient() {
             />
 
             {contentsFields.map(field => {
-              const { label, registerName, placeholder, isArray, requiredOption } = getRegisterNameAndPlaceholder(
+              const { label, registerName, placeholder, isArray, requiredOption } = getEventBodyFormData(
                 field.sectionType,
                 field.orderNo,
               );
@@ -250,11 +262,15 @@ export function EventRegisterClient() {
                   label={`${label} ${field.orderNo! + 1}`}
                   textInputName={registerName}
                   register={register(registerName as FormContentsRegisterNameType, { ...requiredOption })}
-                  sectionStyleFields={handleSectionStyleFields(`pageJson.body.${field.orderNo}.sectionStyle`)}
+                  sectionStyleFields={handleSectionStyleFields(
+                    `pageJson.body.${field.orderNo}.sectionStyle`,
+                    field.sectionType,
+                  )}
                   contentsStyleFields={handleStyleFields(`pageJson.body.${field.orderNo}.contents.style`)}
                   showStyleFields={showStyleFields[field.orderNo]}
                   toggleStyleFields={() => toggleStyleFields(field.orderNo)}
                   placeholder={placeholder}
+                  readOnly={field.sectionType === 'custom'}
                   orderNo={field.orderNo}
                   onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
                   onDelete={handleRemoveSection}
