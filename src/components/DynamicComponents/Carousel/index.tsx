@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { wrapper, slideImage } from './Carousel.css';
 import { ReactElement } from 'react';
 
-interface CarouselProps {
+export interface CarouselProps {
   style?: React.CSSProperties;
   items: string[];
 }

@@ -1,15 +1,12 @@
 import { IoMdArrowBack } from 'react-icons/io';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
-export interface TitleProps {
+export interface HeaderProps {
   text?: string;
-  fontSize?: string | number;
-  fontWeight?: string | number;
-  textAlign?: 'left' | 'center' | 'right';
-  color?: string;
+  style?: React.CSSProperties;
 }
 
-export const Title = ({ text, fontSize, fontWeight, textAlign, color }: TitleProps) => {
+export const Header = ({ text, style }: HeaderProps) => {
   return (
     <div
       style={{
@@ -24,10 +21,7 @@ export const Title = ({ text, fontSize, fontWeight, textAlign, color }: TitlePro
       <div style={{ width: '100%' }}>
         <h1
           style={{
-            fontSize,
-            fontWeight,
-            textAlign,
-            color,
+            ...style,
             wordBreak: 'keep-all',
           }}
         >

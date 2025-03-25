@@ -2,31 +2,45 @@ import { EventFormType, PageJsonContentsItem, StyleConfig } from '@sd-ui-admin/t
 import { useFormContext, useWatch } from 'react-hook-form';
 import React from 'react';
 import {
-  Title,
+  Header,
   ImageWithChildren,
   Image,
   Group,
   Button,
   Carousel,
+  CarouselProps,
   FloatingButton,
   Footer,
+  HeaderProps,
+  ImageProps,
+  FooterProps,
+  ButtonProps,
+  FloatingButtonProps,
 } from '@sd-ui-admin/components/DynamicComponents';
 
 interface PreviewDetailProps {
   eventBackground?: string;
 }
 
-// header
 // event title... ?
 const MAPPED_COMPONENTS = {
-  TITLE: Title,
-  IMAGE_WITH_CHILDREN: ImageWithChildren,
-  GROUP: Group,
+  HEADER: Header,
+  // IMAGE_WITH_CHILDREN: ImageWithChildren,
+  // GROUP: Group,
   IMAGE: Image,
   BUTTON: Button,
   CAROUSEL: Carousel,
   FLOATINGBUTTON: FloatingButton,
   FOOTER: Footer,
+};
+
+type ComponentPropsMap = {
+  HEADER: HeaderProps;
+  IMAGE: ImageProps;
+  BUTTON: ButtonProps;
+  CAROUSEL: CarouselProps;
+  FLOATINGBUTTON: FloatingButtonProps;
+  FOOTER: FooterProps;
 };
 
 interface ComponentData {
@@ -49,7 +63,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
     name: ['eventTitle', 'pageJson'],
   });
 
-  const body = pageJson?.body || [];
+  const { header, body, footer } = pageJson;
 
   return (
     <div
@@ -72,9 +86,9 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
           width: '360px',
         }}
       >
-        <header>
-          <h3 style={{ margin: '0', padding: '20px', background: '#ffffff' }}>{pageJson.header}</h3>
-        </header>
+        {/*<h3 style={{ margin: '0', padding: '20px', background: '#ffffff' }}>{pageJson.header}</h3>*/}
+        {header && <header>{/*<RenderComponent type={fieldTypeToComponentType('header')} text={header} />*/}</header>}
+
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: eventBackground }}>
           {Array.isArray(body) && body.length > 0 ? (
             body
@@ -85,7 +99,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
                 </section>
               ))
           ) : (
-            <p>Empty here...</p>
+            <p>Empty body...</p>
           )}
         </div>
       </div>
