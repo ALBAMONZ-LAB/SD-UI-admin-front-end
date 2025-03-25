@@ -1,8 +1,14 @@
 'use client';
 
-import { useGetEventPage, usePatchEventPage, usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
+import { useGetEventPage, usePostEventPage } from '@sd-ui-admin/api/event/event.queries';
 import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/components';
-import { ADD_DEFAULT_BODY_DATA, DEFAULT_SECTION_STYLE, DEFAULT_STYLE, FORM_FIELD_TITLE } from '@sd-ui-admin/constant';
+import {
+  ADD_DEFAULT_BODY_DATA,
+  DEFAULT_FIXED_SECTION_STYLE,
+  DEFAULT_SECTION_STYLE,
+  DEFAULT_STYLE,
+  FORM_FIELD_TITLE,
+} from '@sd-ui-admin/constant';
 import {
   ContentsStyleRegisterType,
   EventFormType,
@@ -22,9 +28,10 @@ interface EventDetailPageClientProps {
 export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
   const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
   const { data, isLoading, error } = useGetEventPage(eventId);
+  const [formDataState, setFormDataState] = useState<EventFormType>();
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
-  const [eventBackground, setEventBackground] = useState('');
-  const { mutate } = usePatchEventPage();
+  const [eventBackground, setEventBackground] = useState('#ffffff');
+  const { mutate } = usePostEventPage();
 
   const methods = useForm<EventFormType>({
     mode: 'onSubmit',
@@ -47,7 +54,7 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
 
   useEffect(() => {
     if (data) {
-      setEventBackground((data.pageJson.body![0].sectionStyle.background as string));
+      setEventBackground(data.pageJson.body![0].sectionStyle.background as string);
       reset(data);
     }
   }, [data, reset]);
@@ -68,7 +75,7 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
       ...formData,
       pageJson: JSON.stringify(formData.pageJson),
     };
-    mutate({ eventId, body: formDataWithStringPageJson });
+    mutate({ ...formDataWithStringPageJson });
   };
 
   function findFirstErrorMessage(errors: FieldErrors): string | null {
@@ -112,10 +119,13 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
   const handleStyleFields = (fieldPrefix: ContentsStyleRegisterType) =>
     createStyleFieldRegister<ContentsStyleRegisterType>(fieldPrefix, DEFAULT_STYLE);
 
-  const handleSectionStyleFields = (fieldPrefix: SectionStyleRegisterType) =>
-    createStyleFieldRegister<SectionStyleRegisterType>(fieldPrefix, DEFAULT_SECTION_STYLE);
+  const handleSectionStyleFields = (fieldPrefix: SectionStyleRegisterType, sectionType: PageJsonBodyItemType) =>
+    createStyleFieldRegister<SectionStyleRegisterType>(
+      fieldPrefix,
+      sectionType === 'floatingButton' ? DEFAULT_FIXED_SECTION_STYLE : DEFAULT_SECTION_STYLE,
+    );
 
-  function getRegisterNameAndPlaceholder(sectionType: PageJsonBodyItemType, orderNo: number) {
+  function getEventBodyFormData(sectionType: PageJsonBodyItemType, orderNo: number) {
     const label = FORM_FIELD_TITLE[sectionType];
     let registerName = `pageJson.body.${orderNo}.contents`;
     let placeholder;
@@ -123,9 +133,10 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
     const requiredOption = { required: `${label} 콘텐츠에 내용은 필수입니다` };
 
     switch (sectionType) {
+      case 'floatingButton':
       case 'button':
         registerName += '.text';
-        placeholder = '서비스 시작';
+        placeholder = '버튼이름';
         break;
       case 'carousel':
         registerName += '.src';
@@ -138,7 +149,7 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
         break;
       default:
         registerName += '.text';
-        placeholder = '입력';
+        placeholder = '';
         break;
     }
     return { label, registerName, placeholder, isArray, requiredOption };
@@ -151,7 +162,7 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
       ...ADD_DEFAULT_BODY_DATA[selectedSection],
       sectionStyle: {
         ...ADD_DEFAULT_BODY_DATA[selectedSection].sectionStyle,
-        background: eventBackground,
+        background: selectedSection === 'floatingButton' ? 'transparent' : eventBackground,
       },
     });
   };
@@ -177,7 +188,10 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
   const handleBackgroundChange = () => {
     const updatedFields = contentsFields.map(({ id, ...field }) => ({
       ...field,
-      sectionStyle: { ...field.sectionStyle, background: eventBackground },
+      sectionStyle: {
+        ...field.sectionStyle,
+        background: field.sectionType === 'floatingButton' ? 'transparent' : eventBackground,
+      },
     }));
     setValue('pageJson.body', updatedFields);
   };
@@ -213,6 +227,8 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
                 <option value="image">이미지</option>
                 <option value="button">버튼</option>
                 <option value="carousel">캐러셀</option>
+                <option value="floatingButton">플로팅 버튼</option>
+                <option value="custom">커스텀</option>
               </select>
               <button className={styles.addSectionButton} type="button" onClick={handleAddSection}>
                 추가
@@ -246,7 +262,7 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
             />
 
             {contentsFields.map(field => {
-              const { label, registerName, placeholder, isArray, requiredOption } = getRegisterNameAndPlaceholder(
+              const { label, registerName, placeholder, isArray, requiredOption } = getEventBodyFormData(
                 field.sectionType,
                 field.orderNo,
               );
@@ -257,11 +273,15 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
                   label={`${label} ${field.orderNo! + 1}`}
                   textInputName={registerName}
                   register={register(registerName as FormContentsRegisterNameType, { ...requiredOption })}
-                  sectionStyleFields={handleSectionStyleFields(`pageJson.body.${field.orderNo}.sectionStyle`)}
+                  sectionStyleFields={handleSectionStyleFields(
+                    `pageJson.body.${field.orderNo}.sectionStyle`,
+                    field.sectionType,
+                  )}
                   contentsStyleFields={handleStyleFields(`pageJson.body.${field.orderNo}.contents.style`)}
                   showStyleFields={showStyleFields[field.orderNo]}
                   toggleStyleFields={() => toggleStyleFields(field.orderNo)}
                   placeholder={placeholder}
+                  readOnly={field.sectionType === 'custom'}
                   orderNo={field.orderNo}
                   onOrderNoChange={(newOrderNo: number) => handleOrderNoChange(field.orderNo, newOrderNo)}
                   onDelete={handleRemoveSection}
@@ -272,7 +292,7 @@ export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
             })}
             <div className={styles.saveButtonContainer}>
               <button type="submit" className={styles.addSectionButton}>
-                이벤트 수정
+                이벤트 등록
               </button>
             </div>
           </form>
