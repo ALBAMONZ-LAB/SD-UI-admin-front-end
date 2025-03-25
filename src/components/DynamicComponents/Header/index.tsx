@@ -1,15 +1,12 @@
+import { PageJsonContentsItem } from '@sd-ui-admin/types';
 import { IoMdArrowBack } from 'react-icons/io';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
-export interface TitleProps {
-  text?: string;
-  fontSize?: string | number;
-  fontWeight?: string | number;
-  textAlign?: 'left' | 'center' | 'right';
-  color?: string;
+export interface HeaderProps {
+  contents: Partial<PageJsonContentsItem>;
 }
 
-export const Title = ({ text, fontSize, fontWeight, textAlign, color }: TitleProps) => {
+export const Header = ({ contents }: HeaderProps) => {
   return (
     <div
       style={{
@@ -24,14 +21,11 @@ export const Title = ({ text, fontSize, fontWeight, textAlign, color }: TitlePro
       <div style={{ width: '100%' }}>
         <h1
           style={{
-            fontSize,
-            fontWeight,
-            textAlign,
-            color,
+            ...contents.style,
             wordBreak: 'keep-all',
           }}
         >
-          {text}
+          {contents.text}
         </h1>
       </div>
       <RxHamburgerMenu
