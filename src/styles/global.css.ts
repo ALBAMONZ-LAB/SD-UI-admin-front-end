@@ -12,6 +12,10 @@ globalStyle('html, body', {
   flexDirection: 'column',
 });
 
+globalStyle('div, section, button, input, textarea', {
+  boxSizing: 'border-box',
+});
+
 globalStyle('a', {
   textDecoration: 'none',
   color: 'inherit',
@@ -49,6 +53,10 @@ globalStyle('.container', {
 });
 
 globalStyle('::placeholder', {
-  fontSize: '12px', // Smaller font size
-  color: '#aaa', // Lighter color
+  fontSize: '12px',
+  color: '#aaa',
+});
+
+globalStyle('input:read-only', {
+  background: '#eee',
 });

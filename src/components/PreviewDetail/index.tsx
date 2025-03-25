@@ -1,4 +1,4 @@
-import { EventFormType, PageJsonContentsItem } from '@sd-ui-admin/types';
+import { EventFormType, PageJsonContentsItem, StyleConfig } from '@sd-ui-admin/types';
 import { useFormContext, useWatch } from 'react-hook-form';
 import React from 'react';
 import {
@@ -25,7 +25,7 @@ const MAPPED_COMPONENTS = {
   IMAGE: Image,
   BUTTON: Button,
   CAROUSEL: Carousel,
-  FLOATING_BUTTON: FloatingButton,
+  FLOATINGBUTTON: FloatingButton,
   FOOTER: Footer,
 };
 
@@ -34,7 +34,7 @@ interface ComponentData {
   orderNo: number;
   children?: ComponentData[];
   contents: PageJsonContentsItem;
-  style?: Record<string, string>;
+  sectionStyle: Partial<StyleConfig>;
 }
 
 //  TODO type 맞추기
@@ -57,6 +57,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        position: 'relative',
       }}
     >
       <h2>페이지 미리보기</h2>
@@ -70,22 +71,35 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
         }}
       >
         <header>
-          <h3 style={{ margin: '0', padding: '20px',background:'#ffffff' }}>{pageJson.header}</h3>
+          <h3 style={{ margin: '0', padding: '20px', background: '#ffffff' }}>{pageJson.header}</h3>
         </header>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: eventBackground }}>
           {Array.isArray(body) && body.length > 0 ? (
-            body.map((item, index) => (
-              <RenderComponent
-                key={`${item.sectionType}_${index}`}
-                {...item}
-                type={fieldTypeToComponentType(item.sectionType)}
-              />
-            ))
+            body
+              .filter(item => item.sectionType !== 'floatingButton')
+              .map((item, index) => (
+                <section key={`${item.sectionType}_${index}`} style={item.sectionStyle}>
+                  <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
+                </section>
+              ))
           ) : (
             <p>Empty here...</p>
           )}
         </div>
       </div>
+      {/*임시로 플로팅 영역 만들어 놨습니다.*/}
+      {Array.isArray(body) &&
+        body.length > 0 &&
+        body
+          .filter(item => item.sectionType === 'floatingButton')
+          .map((item, index) => (
+            <section
+              key={`${item.sectionType}_${index}`}
+              style={{ ...item.sectionStyle, position: 'absolute', width: '360px', left: '49px' }}
+            >
+              <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
+            </section>
+          ))}
     </div>
   );
 });
@@ -111,16 +125,15 @@ const RenderComponent = ({ type, orderNo, children, ...data }: ComponentData) =>
 
 const getComponentProps = (data: ComponentData) => {
   const common = {
-    sectionStyle: data.style,
-    style: data.contents?.style,
+    sectionStyle: data.sectionStyle,
     orderNo: data.orderNo,
     contents: {
       text: data.contents?.text || '',
       src: data.contents?.src || '',
+      style: data.contents?.style,
     },
     items: [],
   };
-
   switch (data.type) {
     case 'CAROUSEL':
       // TODO 이거 타입.. 이대로 할건지.. 여쭤보기 ..
@@ -137,6 +150,11 @@ const getComponentProps = (data: ComponentData) => {
       return {
         ...common,
         src: data.contents?.src || '',
+      };
+    case 'FLOATINGBUTTON':
+      return {
+        ...common,
+        src: data.contents?.text || '',
       };
     default:
       return common;

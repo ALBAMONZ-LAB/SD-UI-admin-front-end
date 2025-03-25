@@ -13,6 +13,7 @@ interface EventFormSectionProps {
   showStyleFields: boolean;
   toggleStyleFields: (orderNo: number) => void;
   placeholder?: string;
+  readOnly?: boolean;
   orderNo: number;
   onOrderNoChange: (orderNo: number) => void;
   onDelete: (orderNo: number) => void;
@@ -29,6 +30,7 @@ export function EventFormSection({
   showStyleFields,
   toggleStyleFields,
   placeholder,
+  readOnly = false,
   orderNo,
   onOrderNoChange,
   onDelete,
@@ -44,6 +46,7 @@ export function EventFormSection({
           register={register}
           onButtonClick={() => toggleStyleFields(orderNo)}
           placeholder={placeholder}
+          readOnly={readOnly}
           isArray={isArray}
         />
         <select className={styles.selectBox} value={orderNo} onChange={e => onOrderNoChange(Number(e.target.value))}>
