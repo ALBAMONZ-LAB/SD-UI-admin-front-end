@@ -30,7 +30,7 @@ interface EventDetailPageClientProps {
 
 export function EventDetailPageClient({ eventId }: EventDetailPageClientProps) {
   const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
-  const { data, isLoading, error } = useGetEventPage(eventId);
+  const { data } = useGetEventPage(eventId, { suspense: true });
   const [hasFooter, setHasFooter] = useState(false);
   const [footerShowStyleFields, setFooterShowStyleFields] = useState(false);
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
