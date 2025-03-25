@@ -341,7 +341,7 @@ export function EventRegisterClient() {
           </form>
         </section>
 
-        <section className={styles.section} style={{}}>
+        <section className={styles.section}>
           <PreviewDetail eventBackground={watch('pageJson.body.0.sectionStyle.background')} />
         </section>
       </div>
