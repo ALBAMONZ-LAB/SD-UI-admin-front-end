@@ -1,14 +1,17 @@
 export interface ImageProps {
-  contents: { src: string };
-  style?: React.CSSProperties & {
-    imageWidth?: string | number;
+  contents: {
+    src: string;
+    style?: React.CSSProperties & {
+      imageWidth?: string | number;
+    };
   };
+  sectionStyle?: React.CSSProperties;
 }
 
-export const Image = ({ contents, style = {} }: ImageProps) => {
+export const Image = ({ contents, sectionStyle }: ImageProps) => {
   return (
-    <div style={{ ...style }}>
-      {contents.src && <img src={contents.src} alt="example" style={{ width: style?.imageWidth || '100%' }} />}
+    <div style={{ ...sectionStyle }}>
+      {contents.src && <img src={contents.src} alt="example" style={{ width: contents.style?.imageWidth || '100%' }} />}
     </div>
   );
 };
