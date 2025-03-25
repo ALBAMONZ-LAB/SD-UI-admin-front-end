@@ -75,9 +75,9 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
     >
       <h2>페이지 미리보기</h2>
       {eventTitle}
-      <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+      {/* <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
         {JSON.stringify(pageJson, null, 2)}
-      </pre>
+      </pre> */}
       <div
         style={{
           width: '360px',
@@ -155,7 +155,6 @@ const getComponentProps = (data: ComponentData) => {
   };
   switch (data.type) {
     case 'CAROUSEL':
-      // TODO 이거 타입.. 이대로 할건지.. 여쭤보기 ..
       return {
         ...common,
         items: data.contents?.src ? data.contents.src.split(',').map(url => url.trim()) : [],

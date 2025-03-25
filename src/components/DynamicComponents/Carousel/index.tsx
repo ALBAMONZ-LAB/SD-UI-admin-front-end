@@ -1,22 +1,23 @@
 'use client';
 
+import { PageJsonContentsItem } from '@sd-ui-admin/types';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { wrapper, slideImage } from './Carousel.css';
-import { ReactElement } from 'react';
 
 export interface CarouselProps {
-  style?: React.CSSProperties;
+  contents: Partial<PageJsonContentsItem>;
   items: string[];
+  sectionStyle?: React.CSSProperties;
 }
 
-export const Carousel = ({ style, items, ...props }: CarouselProps) => {
+export const Carousel = ({ contents, items, sectionStyle, ...props }: CarouselProps) => {
   const hasEnoughSlides = items.length > 2;
   return (
     <div
       className={wrapper}
       style={{
-        ...style,
+        ...sectionStyle,
       }}
     >
       <Swiper
