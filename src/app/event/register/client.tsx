@@ -5,6 +5,7 @@ import { EventFormSection, PreviewDetail, TextInputForm } from '@sd-ui-admin/com
 import {
   ADD_DEFAULT_BODY_DATA,
   DEFAULT_FIXED_SECTION_STYLE,
+  DEFAULT_FOOTER_STYLE,
   DEFAULT_SECTION_STYLE,
   DEFAULT_STYLE,
   FORM_FIELD_TITLE,
@@ -12,18 +13,21 @@ import {
 import {
   ContentsStyleRegisterType,
   EventFormType,
+  FooterContentsStyleRegisterType,
+  FooterStyleRegisterType,
   FormContentsRegisterNameType,
   PageJsonBodyItemType,
   SectionStyleRegisterType,
   StyleConfig,
 } from '@sd-ui-admin/types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FieldErrors, FormProvider, useFieldArray, useForm, UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
 
 export function EventRegisterClient() {
   const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
-  const [formDataState, setFormDataState] = useState<EventFormType>();
+  const [hasFooter, setHasFooter] = useState(false);
+  const [footerShowStyleFields, setFooterShowStyleFields] = useState(false);
   const [selectedSection, setSelectedSection] = useState<PageJsonBodyItemType>('image');
   const [eventBackground, setEventBackground] = useState('#ffffff');
   const { mutate } = usePostEventPage();
@@ -35,7 +39,6 @@ export function EventRegisterClient() {
       pageJson: {
         header: '',
         body: [],
-        footer: {},
       },
     },
   });
@@ -47,11 +50,11 @@ export function EventRegisterClient() {
     name: 'pageJson.body',
   });
 
-  useEffect(() => {
-    setFormDataState(watch());
-  }, [watch]);
-
   const toggleStyleFields = (orderNo: number) => {
+    if (orderNo === -1) {
+      setFooterShowStyleFields(!footerShowStyleFields);
+      return;
+    }
     setShowStyleFields(prev => ({
       ...prev,
       [orderNo]: !prev[orderNo],
@@ -95,10 +98,13 @@ export function EventRegisterClient() {
     }
   };
 
-  function createStyleFieldRegister<T extends ContentsStyleRegisterType | SectionStyleRegisterType>(
-    fieldPrefix: T,
-    defaultStyleObj: Partial<StyleConfig>,
-  ): Record<T, UseFormRegisterReturn> {
+  function createStyleFieldRegister<
+    T extends
+      | ContentsStyleRegisterType
+      | SectionStyleRegisterType
+      | FooterStyleRegisterType
+      | FooterContentsStyleRegisterType,
+  >(fieldPrefix: T, defaultStyleObj: Partial<StyleConfig>): Record<T, UseFormRegisterReturn> {
     return Object.keys(defaultStyleObj).reduce(
       (acc, styleKey) => {
         acc[styleKey as T] = register(`${fieldPrefix}.${styleKey}` as T);
@@ -180,7 +186,10 @@ export function EventRegisterClient() {
   const handleBackgroundChange = () => {
     const updatedFields = contentsFields.map(({ id, ...field }) => ({
       ...field,
-      sectionStyle: { ...field.sectionStyle, background: field.sectionType ==='floatingButton'? 'transparent' :eventBackground },
+      sectionStyle: {
+        ...field.sectionStyle,
+        background: field.sectionType === 'floatingButton' ? 'transparent' : eventBackground,
+      },
     }));
     setValue('pageJson.body', updatedFields);
   };
@@ -205,8 +214,29 @@ export function EventRegisterClient() {
     <FormProvider {...methods}>
       <div className={styles.container}>
         <section className={styles.section}>
-          <div className={styles.addSection} style={{ marginBottom: '0' }}>
-            <h3>콘텐츠 추가</h3>
+          <div className={styles.addSection} style={{ marginBottom: '8px' }}>
+            <h3 style={{ margin: '0' }}>Footer 추가</h3>
+            <div className={styles.addSectionField}>
+              <button
+                className={styles.addSectionButton}
+                type="button"
+                onClick={() => {
+                  setHasFooter(true);
+                  setValue('pageJson.footer', {
+                    contents: {
+                      src: '',
+                      style: DEFAULT_FOOTER_STYLE,
+                    },
+                    sectionStyle: DEFAULT_SECTION_STYLE,
+                  });
+                }}
+              >
+                추가
+              </button>
+            </div>
+          </div>
+          <div className={styles.addSection} style={{ marginBottom: '8px' }}>
+            <h3 style={{ margin: '0' }}>콘텐츠 추가</h3>
             <div className={styles.addSectionField}>
               <select
                 className={styles.addSectionSelect}
@@ -241,12 +271,10 @@ export function EventRegisterClient() {
           <form onSubmit={handleSubmit(onSubmit, onError)}>
             <TextInputForm
               label="이벤트 제목"
-              name={'eventTitle'}
               register={register('eventTitle', { required: '이벤트 제목을 입력해주세요.' })}
             />
             <TextInputForm
               label="헤더(Header)"
-              name={'pageJson.header'}
               register={register('pageJson.header', { required: '헤더를 입력해 주세요.' })}
             />
 
@@ -260,7 +288,6 @@ export function EventRegisterClient() {
                 <EventFormSection
                   key={field.id}
                   label={`${label} ${field.orderNo! + 1}`}
-                  textInputName={registerName}
                   register={register(registerName as FormContentsRegisterNameType, { ...requiredOption })}
                   sectionStyleFields={handleSectionStyleFields(
                     `pageJson.body.${field.orderNo}.sectionStyle`,
@@ -279,6 +306,33 @@ export function EventRegisterClient() {
                 />
               );
             })}
+            {hasFooter && (
+              <EventFormSection
+                label={'푸터(Footer)'}
+                register={register('pageJson.footer.contents.src', {
+                  required: hasFooter ? '푸터 내용을 입력해주세요.' : false,
+                })}
+                sectionStyleFields={createStyleFieldRegister<FooterStyleRegisterType>(
+                  'pageJson.footer.sectionStyle',
+                  DEFAULT_SECTION_STYLE,
+                )}
+                contentsStyleFields={createStyleFieldRegister<FooterContentsStyleRegisterType>(
+                  'pageJson.footer.contents.style',
+                  DEFAULT_STYLE,
+                )}
+                showStyleFields={footerShowStyleFields}
+                onDelete={() => {
+                  if (!confirm('푸터를 삭제하시겠습니까?')) return;
+                  setHasFooter(false);
+                  toggleStyleFields(-1);
+                  setValue('pageJson.footer', undefined);
+                }}
+                orderNo={-1}
+                toggleStyleFields={() => toggleStyleFields(-1)}
+                placeholder={"본 이벤트 블라, 당첨자 블라  (',') 구분"}
+                isArray={true}
+              />
+            )}
             <div className={styles.saveButtonContainer}>
               <button type="submit" className={styles.addSectionButton}>
                 이벤트 등록
@@ -287,7 +341,7 @@ export function EventRegisterClient() {
           </form>
         </section>
 
-        <section className={styles.section}>
+        <section className={styles.section} style={{ display: 'flex', justifyContent: 'center' }}>
           <PreviewDetail eventBackground={watch('pageJson.body.0.sectionStyle.background')} />
         </section>
       </div>

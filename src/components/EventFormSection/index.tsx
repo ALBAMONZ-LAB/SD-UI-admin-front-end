@@ -6,7 +6,6 @@ import * as styles from './index.css';
 
 interface EventFormSectionProps {
   label: string;
-  textInputName: string;
   sectionStyleFields: SectionStyleFormType;
   contentsStyleFields: ContentsStyleFormType;
   register: UseFormRegisterReturn;
@@ -15,15 +14,14 @@ interface EventFormSectionProps {
   placeholder?: string;
   readOnly?: boolean;
   orderNo: number;
-  onOrderNoChange: (orderNo: number) => void;
-  onDelete: (orderNo: number) => void;
-  maxOrderNo: number;
+  onOrderNoChange?: (orderNo: number) => void;
+  onDelete?: (orderNo: number) => void;
+  maxOrderNo?: number;
   isArray?: boolean;
 }
 
 export function EventFormSection({
   label,
-  textInputName,
   sectionStyleFields,
   contentsStyleFields,
   register,
@@ -34,7 +32,7 @@ export function EventFormSection({
   orderNo,
   onOrderNoChange,
   onDelete,
-  maxOrderNo,
+  maxOrderNo = 0,
   isArray = false,
 }: EventFormSectionProps) {
   return (
@@ -42,21 +40,26 @@ export function EventFormSection({
       <div className={styles.inputFormWrapper}>
         <TextInputForm
           label={label}
-          name={textInputName}
           register={register}
           onButtonClick={() => toggleStyleFields(orderNo)}
           placeholder={placeholder}
           readOnly={readOnly}
           isArray={isArray}
         />
-        <select className={styles.selectBox} value={orderNo} onChange={e => onOrderNoChange(Number(e.target.value))}>
-          {Array.from({ length: maxOrderNo + 1 }, (_, i) => (
-            <option key={i} value={i}>
-              위치 순서: {i}
-            </option>
-          ))}
-        </select>
-        <button type="button" className={styles.deleteButton} onClick={() => onDelete(orderNo)}>
+        {orderNo > -1 ? (
+          <select
+            className={styles.selectBox}
+            value={orderNo ?? 0}
+            onChange={e => onOrderNoChange?.(Number(e.target.value))}
+          >
+            {Array.from({ length: maxOrderNo + 1 }, (_, i) => (
+              <option key={i} value={i}>
+                위치 순서: {i}
+              </option>
+            ))}
+          </select>
+        ) : null}
+        <button type="button" className={styles.deleteButton} onClick={() => onDelete?.(orderNo ?? 0)}>
           삭제 X
         </button>
       </div>
