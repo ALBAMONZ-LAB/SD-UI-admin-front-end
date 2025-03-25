@@ -1,12 +1,12 @@
+import { PageJsonContentsItem } from '@sd-ui-admin/types';
 import { IoMdArrowBack } from 'react-icons/io';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
 export interface HeaderProps {
-  text?: string;
-  style?: React.CSSProperties;
+  contents: Partial<PageJsonContentsItem>;
 }
 
-export const Header = ({ text, style }: HeaderProps) => {
+export const Header = ({ contents }: HeaderProps) => {
   return (
     <div
       style={{
@@ -21,11 +21,11 @@ export const Header = ({ text, style }: HeaderProps) => {
       <div style={{ width: '100%' }}>
         <h1
           style={{
-            ...style,
+            ...contents.style,
             wordBreak: 'keep-all',
           }}
         >
-          {text}
+          {contents.text}
         </h1>
       </div>
       <RxHamburgerMenu

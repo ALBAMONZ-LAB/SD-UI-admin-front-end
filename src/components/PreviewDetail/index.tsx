@@ -45,10 +45,10 @@ type ComponentPropsMap = {
 
 interface ComponentData {
   type: keyof typeof MAPPED_COMPONENTS;
-  orderNo: number;
+  orderNo?: number;
   children?: ComponentData[];
-  contents: PageJsonContentsItem;
-  sectionStyle: Partial<StyleConfig>;
+  contents: Partial<PageJsonContentsItem>;
+  sectionStyle?: Partial<StyleConfig>;
 }
 
 //  TODO type 맞추기
@@ -86,8 +86,11 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
           width: '360px',
         }}
       >
-        {/*<h3 style={{ margin: '0', padding: '20px', background: '#ffffff' }}>{pageJson.header}</h3>*/}
-        {header && <header>{/*<RenderComponent type={fieldTypeToComponentType('header')} text={header} />*/}</header>}
+        {header && (
+          <header>
+            <RenderComponent type={fieldTypeToComponentType('header')} contents={{ text: header }} />
+          </header>
+        )}
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: eventBackground }}>
           {Array.isArray(body) && body.length > 0 ? (
