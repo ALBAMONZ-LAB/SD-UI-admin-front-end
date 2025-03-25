@@ -2,15 +2,17 @@ import { PageJsonContentsItem } from '@sd-ui-admin/types';
 
 export interface ButtonProps {
   contents: PageJsonContentsItem;
-  style?: React.CSSProperties;
+  sectionStyle?: React.CSSProperties;
 }
 
-export const Button = ({ contents, style }: ButtonProps) => {
+export const Button = ({ contents, sectionStyle }: ButtonProps) => {
   return (
     contents?.text && (
-      <button style={contents.style} aria-disabled>
-        {contents.text}
-      </button>
+      <div style={{ ...sectionStyle }}>
+        <button style={contents.style} aria-disabled>
+          {contents.text}
+        </button>
+      </div>
     )
   );
 };
