@@ -52,7 +52,7 @@ export const DEFAULT_FOOTER_STYLE: StyleConfig = {
 };
 
 export const DEFAULT_SECTION_STYLE: Partial<StyleConfig> = {
-  padding: '0 20px',
+  padding: '0',
   margin: '0',
   width: '100%',
   background: 'transparent',

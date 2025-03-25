@@ -19,8 +19,8 @@ import { EventDetailResponse, EventRequest } from '@sd-ui-admin/types';
 //   });
 // }
 
-export const useGetEventPage = (eventId: number): UseQueryResult<EventDetailResponse, any> => {
-  return useQuery({ queryKey: ['event', eventId], queryFn: () => getEventDetailPage(eventId) });
+export const useGetEventPage = (eventId: number, options = {}): UseQueryResult<EventDetailResponse, any> => {
+  return useQuery({ queryKey: ['event', eventId], queryFn: () => getEventDetailPage(eventId), ...options });
 };
 
 export const usePostEventPage = (): UseMutationResult<any, any, EventRequest, unknown> => {
