@@ -78,9 +78,9 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
     >
       <h2>페이지 미리보기</h2>
       {eventTitle}
-      {/*<pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>*/}
-      {/*  {JSON.stringify(pageJson, null, 2)}*/}
-      {/*</pre>*/}
+      {/* <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
+        {JSON.stringify(pageJson, null, 2)}
+      </pre> */}
       <div
         style={{
           width: '360px',
@@ -119,6 +119,8 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
               <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
             </section>
           ))}
+      {/* TODO footer type 이상해요.. src있어요 */}
+      {footer && <RenderComponent type={fieldTypeToComponentType('footer')} contents={{ ...footer.contents }} />}
     </div>
   );
 });
