@@ -58,7 +58,8 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
-        width:'360px'
+        width: '360px',
+        margin: 'auto',
       }}
     >
       <h2>페이지 미리보기</h2>
@@ -96,7 +97,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
           .map((item, index) => (
             <section
               key={`${item.sectionType}_${index}`}
-              style={{ ...item.sectionStyle, position: 'absolute', width: '360px'}}
+              style={{ ...item.sectionStyle, position: 'absolute', width: '360px' }}
             >
               <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
             </section>
