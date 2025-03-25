@@ -44,10 +44,10 @@ export const DEFAULT_FOOTER_STYLE: StyleConfig = {
   background: '#eee',
   width: '100%',
   height: 'auto',
-  fontSize: '16px',
+  fontSize: '12px',
   border: 'none',
   borderRadius: '0',
-  color: '#ffffff',
+  color: '#6a6a6a',
   display: 'block',
 };
 

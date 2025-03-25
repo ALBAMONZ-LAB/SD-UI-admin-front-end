@@ -4,7 +4,6 @@ import { InputHTMLAttributes, MouseEventHandler } from 'react';
 
 interface TextInputFormProps extends InputHTMLAttributes<HTMLElement> {
   label: string;
-  name: string;
   register?: UseFormRegisterReturn;
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
   isArray?: boolean;
