@@ -64,7 +64,7 @@ export const DEFAULT_SECTION_STYLE: Partial<StyleConfig> = {
 export const DEFAULT_FIXED_SECTION_STYLE: Partial<StyleConfig> = {
   ...DEFAULT_SECTION_STYLE,
   position: 'fixed',
-  bottom: '30px',
+  bottom: '15px',
   zIndex: '1000',
 };
 

@@ -1,21 +1,21 @@
-import { EventFormType, PageJsonContentsItem, StyleConfig } from '@sd-ui-admin/types';
-import { useFormContext, useWatch } from 'react-hook-form';
-import React from 'react';
 import {
-  Header,
-  Image,
   Button,
+  ButtonProps,
   Carousel,
   CarouselProps,
-  FloatingButton,
-  Footer,
-  HeaderProps,
-  ImageProps,
-  FooterProps,
-  ButtonProps,
-  FloatingButtonProps,
   CustomizedComponent,
+  FloatingButton,
+  FloatingButtonProps,
+  Footer,
+  FooterProps,
+  Header,
+  HeaderProps,
+  Image,
+  ImageProps,
 } from '@sd-ui-admin/components/DynamicComponents';
+import { EventFormType, PageJsonContentsItem, StyleConfig } from '@sd-ui-admin/types';
+import React from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 interface PreviewDetailProps {
   eventBackground?: string;
@@ -68,7 +68,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        position: 'relative',
+
         width: '360px',
         margin: 'auto',
       }}
@@ -81,6 +81,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
       <div
         style={{
           width: '360px',
+          position: 'relative',
         }}
       >
         {header && (
@@ -89,17 +90,53 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
           </header>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: eventBackground }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            background: eventBackground,
+            overflow: 'auto',
+            scrollbarWidth: 'thin',
+            msOverflowStyle: 'none',
+            maxHeight: '750px',
+          }}
+        >
           {Array.isArray(body) && body.length > 0 ? (
-            body.map((item, index) => (
-              <section key={`${item.sectionType}_${index}`} style={item.sectionStyle}>
-                <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
-              </section>
-            ))
+            body
+              .filter(item => item.sectionType !== 'floatingButton')
+              .map((item, index) => (
+                <section
+                  key={`${item.sectionType}_${index}`}
+                  style={{
+                    ...item.sectionStyle,
+                    ...(item.sectionType === 'floatingButton' && { position: 'absolute', width: '360px' }),
+                  }}
+                >
+                  <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
+                </section>
+              ))
           ) : (
             <p>Empty body...</p>
           )}
         </div>
+        {Array.isArray(body) &&
+          body.length > 0 &&
+          body.some(item => item.sectionType === 'floatingButton') &&
+          body
+            .filter(item => item.sectionType === 'floatingButton')
+            .map((item, index) => (
+              <section
+                key={`${item.sectionType}_${index}`}
+                style={{
+                  ...item.sectionStyle,
+                  position: 'absolute',
+                  width: '360px',
+                }}
+              >
+                <RenderComponent {...item} type={fieldTypeToComponentType(item.sectionType)} />
+              </section>
+            ))}
       </div>
       {/* TODO footer type 이상해요.. src있어요 */}
       {footer && <RenderComponent type={fieldTypeToComponentType('footer')} contents={{ ...footer.contents }} />}

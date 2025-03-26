@@ -5,14 +5,12 @@ export interface ButtonProps {
   sectionStyle?: React.CSSProperties;
 }
 
-export const Button = ({ contents, sectionStyle }: ButtonProps) => {
+export const Button = ({ contents }: ButtonProps) => {
   return (
     contents?.text && (
-      <div style={{ ...sectionStyle }}>
-        <button style={contents.style} aria-disabled>
-          {contents.text}
-        </button>
-      </div>
+      <button style={contents.style} aria-disabled>
+        {contents.text}
+      </button>
     )
   );
 };

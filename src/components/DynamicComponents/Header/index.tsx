@@ -19,14 +19,15 @@ export const Header = ({ contents }: HeaderProps) => {
     >
       <IoMdArrowBack size={24} style={{ marginLeft: 20, marginRight: 15, flexShrink: 0 }} />
       <div style={{ width: '100%' }}>
-        <h1
+        <h3
           style={{
             ...contents.style,
             wordBreak: 'keep-all',
+            margin: 0,
           }}
         >
           {contents.text}
-        </h1>
+        </h3>
       </div>
       <RxHamburgerMenu
         size={24}

@@ -8,11 +8,9 @@ export interface FloatingButtonProps {
 export const FloatingButton = ({ contents, sectionStyle }: FloatingButtonProps) => {
   return (
     contents?.text && (
-      <div style={{ ...sectionStyle, position: 'absolute', width: '360px' }}>
-        <button style={contents.style} aria-disabled>
-          {contents.text}
-        </button>
-      </div>
+      <button style={contents.style} aria-disabled>
+        {contents.text}
+      </button>
     )
   );
 };

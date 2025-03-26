@@ -10,8 +10,8 @@ export interface ImageProps {
 
 export const Image = ({ contents, sectionStyle }: ImageProps) => {
   return (
-    <div style={{ ...sectionStyle }}>
+    <>
       {contents.src && <img src={contents.src} alt="example" style={{ width: contents.style?.imageWidth || '100%' }} />}
-    </div>
+    </>
   );
 };
