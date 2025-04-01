@@ -96,7 +96,7 @@ export const ADD_DEFAULT_BODY_DATA: Record<PageJsonBodyItemType, Omit<PageBodyTy
       src: '/images/events/tvcEvent/swiper-1.png,/images/events/tvcEvent/swiper-2.png,/images/events/tvcEvent/swiper-3.png',
       style: DEFAULT_CAROUSEL_STYLE,
     },
-    sectionStyle: DEFAULT_SECTION_STYLE,
+    sectionStyle: { ...DEFAULT_SECTION_STYLE, padding: '24px' },
     sectionType: 'carousel',
   },
   floatingButton: {

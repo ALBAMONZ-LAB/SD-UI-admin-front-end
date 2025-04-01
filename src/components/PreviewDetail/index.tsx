@@ -1,17 +1,11 @@
 import {
   Button,
-  ButtonProps,
   Carousel,
-  CarouselProps,
   CustomizedComponent,
   FloatingButton,
-  FloatingButtonProps,
   Footer,
-  FooterProps,
   Header,
-  HeaderProps,
   Image,
-  ImageProps,
 } from '@sd-ui-admin/components/DynamicComponents';
 import { EventFormType, PageJsonContentsItem, StyleConfig } from '@sd-ui-admin/types';
 import React from 'react';
@@ -29,15 +23,6 @@ const MAPPED_COMPONENTS = {
   FLOATINGBUTTON: FloatingButton,
   FOOTER: Footer,
   CUSTOM: CustomizedComponent,
-};
-
-type ComponentPropsMap = {
-  HEADER: HeaderProps;
-  IMAGE: ImageProps;
-  BUTTON: ButtonProps;
-  CAROUSEL: CarouselProps;
-  FLOATINGBUTTON: FloatingButtonProps;
-  FOOTER: FooterProps;
 };
 
 interface ComponentData {
@@ -75,9 +60,9 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
     >
       <h2>페이지 미리보기</h2>
       {eventTitle}
-      {/* <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>
-        {JSON.stringify(pageJson, null, 2)}
-      </pre> */}
+      {/*<pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '8px' }}>*/}
+      {/*  {JSON.stringify(pageJson, null, 2)}*/}
+      {/*</pre>*/}
       <div
         style={{
           width: '360px',
@@ -97,7 +82,7 @@ export const PreviewDetail = React.memo(function PreviewDetail({ eventBackground
             alignItems: 'center',
             background: eventBackground,
             overflow: 'auto',
-            scrollbarWidth: 'thin',
+            scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             maxHeight: '750px',
           }}
