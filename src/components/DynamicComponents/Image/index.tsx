@@ -1,17 +1,19 @@
+import { CSSProperties } from "react";
+
 export interface ImageProps {
   contents: {
     src: string;
-    style?: React.CSSProperties & {
+    style?: CSSProperties & {
       imageWidth?: string | number;
     };
   };
-  sectionStyle?: React.CSSProperties;
+  sectionStyle?: CSSProperties;
 }
 
-export const Image = ({ contents, sectionStyle }: ImageProps) => {
+export const Image = ({ contents }: ImageProps) => {
   return (
     <>
-      {contents.src && <img src={contents.src} alt="example" style={{ width: contents.style?.imageWidth || '100%' }} />}
+      {contents.src && <img src={contents.src} alt="example" style={{ width: contents.style?.width || '100%' }} />}
     </>
   );
 };

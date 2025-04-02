@@ -4,7 +4,7 @@ export const DEFAULT_BUTTON_STYLE: StyleConfig = {
   padding: '0',
   margin: '0',
   background: '#ff501b',
-  width: '80%',
+  width: '100%',
   height: '48px',
   fontSize: '16px',
   border: 'none',
@@ -88,7 +88,7 @@ export const ADD_DEFAULT_BODY_DATA: Record<PageJsonBodyItemType, Omit<PageBodyTy
   },
   button: {
     contents: { text: '', style: DEFAULT_BUTTON_STYLE },
-    sectionStyle: DEFAULT_SECTION_STYLE,
+    sectionStyle: { ...DEFAULT_SECTION_STYLE, padding: '20px' },
     sectionType: 'button',
   },
   carousel: {
@@ -96,7 +96,7 @@ export const ADD_DEFAULT_BODY_DATA: Record<PageJsonBodyItemType, Omit<PageBodyTy
       src: '/images/events/tvcEvent/swiper-1.png,/images/events/tvcEvent/swiper-2.png,/images/events/tvcEvent/swiper-3.png',
       style: DEFAULT_CAROUSEL_STYLE,
     },
-    sectionStyle: { ...DEFAULT_SECTION_STYLE, padding: '24px' },
+    sectionStyle: { ...DEFAULT_SECTION_STYLE, padding: '20px' },
     sectionType: 'carousel',
   },
   floatingButton: {
