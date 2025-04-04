@@ -1,33 +1,59 @@
 'use client';
 
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, EffectCoverflow } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { slideImage } from './Carousel.css';
+import { slideImage, swiperSlide } from "./Carousel.css";
+import { useEffect, useRef } from 'react';
 
 export interface CarouselProps {
   items: string[];
 }
 
 export const Carousel = ({ items }: CarouselProps) => {
-  const hasEnoughSlides = items.length > 2;
+  const loopItems = items.filter(item => item !== '').length > 3 ? items : [...items, ...items];
+  const swiperRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (swiperRef.current?.autoplay?.start) {
+      swiperRef.current.autoplay.start();
+    }
+  }, [items]);
+
   return (
     <Swiper
-      slidesPerView={1.2}
-      // centeredSlides={true}
-      loop={hasEnoughSlides}
-      spaceBetween={10}
+      slidesPerView={2}
+      centeredSlides={true}
+      loop={true}
+      spaceBetween={15}
       autoplay={{
         delay: 2000,
-        disableOnInteraction: false,
+        disableOnInteraction: true,
       }}
-      modules={[Autoplay]}
+      effect="coverflow"
+      coverflowEffect={{
+        rotate: 0,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: false,
+      }}
+      initialSlide={1} // 0 부터 시작할 경우 이전 이미지가 없기때문에 index[1] 부터 시작.
+      modules={[EffectCoverflow, Autoplay]}
       speed={1500}
+      onSwiper={(swiper) => (swiperRef.current = swiper)}
     >
-      {items.map((item, idx) => (
-        <SwiperSlide key={'CAROUSEL_' + idx}>
-          <img src={item} className={slideImage} alt={`carousel-${idx}`} />
-        </SwiperSlide>
-      ))}
+      {loopItems.map(
+        (item, idx) =>
+          item && (
+            <SwiperSlide key={'CAROUSEL_' + idx} className={swiperSlide}>
+              <img
+                src={item}
+                className={slideImage}
+                alt={`carousel-${idx}`}
+              />
+            </SwiperSlide>
+          ),
+      )}
     </Swiper>
   );
 };

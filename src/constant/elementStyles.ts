@@ -93,7 +93,7 @@ export const ADD_DEFAULT_BODY_DATA: Record<PageJsonBodyItemType, Omit<PageBodyTy
   },
   carousel: {
     contents: {
-      src: '/images/events/tvcEvent/swiper-1.png,/images/events/tvcEvent/swiper-2.png,/images/events/tvcEvent/swiper-3.png',
+      src: 'https://img.jobkorea.co.kr/Images/bbs_notice/2024/07/24/1.jpg,\nhttps://img.jobkorea.co.kr/Images/bbs_notice/2024/07/24/2.jpg,\nhttps://img.jobkorea.co.kr/Images/bbs_notice/2024/07/24/3.jpg,\n',
       style: DEFAULT_CAROUSEL_STYLE,
     },
     sectionStyle: { ...DEFAULT_SECTION_STYLE, padding: '20px' },
