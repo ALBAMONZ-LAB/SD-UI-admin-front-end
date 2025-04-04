@@ -6,6 +6,7 @@
     "paths": {
       "@sd-ui-admin/*": ["src/*"],
       "@sd-ui-components": ["src/components/index"],
+      "@sd-ui-templates": ["src/templates/index"],
       "@sd-ui-api/*": ["src/api"]
     },
     "allowJs": true,
