@@ -23,8 +23,10 @@ import {
 import { useState } from 'react';
 import { FieldErrors, FormProvider, useFieldArray, useForm, UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
+import { useRouter } from 'next/navigation';
 
 export function EventRegisterClient() {
+  const router = useRouter();
   const [showStyleFields, setShowStyleFields] = useState<Record<number, boolean>>({});
   const [hasFooter, setHasFooter] = useState(false);
   const [footerShowStyleFields, setFooterShowStyleFields] = useState(false);
@@ -70,7 +72,14 @@ export function EventRegisterClient() {
       ...formData,
       pageJson: JSON.stringify(formData.pageJson),
     };
-    mutate({ ...formDataWithStringPageJson });
+    mutate(
+      { ...formDataWithStringPageJson },
+      {
+        onSuccess() {
+          router.push('/event');
+        },
+      },
+    );
   };
 
   function findFirstErrorMessage(errors: FieldErrors): string | null {
@@ -200,10 +209,9 @@ export function EventRegisterClient() {
     }
     const updatedFields = contentsFields
       .filter(field => field.orderNo !== targetOrderNo)
-      .map(({ id, ...rest }) => rest)
       .sort((a, b) => a.orderNo - b.orderNo)
-      .map((field, i) => ({
-        ...field,
+      .map(({ id, ...rest }, i) => ({
+        ...rest,
         orderNo: i,
       }));
     setShowStyleFields([]);
