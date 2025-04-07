@@ -181,6 +181,7 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
         background: selectedSection === 'floatingButton' ? 'transparent' : eventBackground,
       },
     });
+    setShowStyleFields({});
   };
 
   const handleOrderNoChange = (currentOrderNo: number, newOrderNo: number) => {
@@ -199,6 +200,7 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
 
     updatedFields.sort((a, b) => a.orderNo - b.orderNo);
     setValue('pageJson.body', updatedFields);
+    setShowStyleFields({});
   };
 
   const handleBackgroundChange = () => {
@@ -223,7 +225,7 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
         ...rest,
         orderNo: i,
       }));
-    setShowStyleFields([]);
+    setShowStyleFields({});
     setValue('pageJson.body', updatedFields);
   };
 

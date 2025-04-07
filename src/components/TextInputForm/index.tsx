@@ -29,7 +29,11 @@ export function TextInputForm({
           </button>
         )}
       </div>
-      {!isArray ? <input {...register} id={name} {...rest} /> : <textarea {...register} id={name} {...rest} />}
+      {!isArray ? (
+        <input {...register} id={name} {...rest} />
+      ) : (
+        <textarea {...register} id={name} {...rest} style={{ height: '100px' }} />
+      )}
     </div>
   );
 }
