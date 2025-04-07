@@ -24,7 +24,6 @@ import {
 import { useEffect, useState } from 'react';
 import { FieldErrors, FormProvider, useFieldArray, useForm, UseFormRegisterReturn } from 'react-hook-form';
 import * as styles from './index.css';
-import { eventInfoField } from './index.css';
 
 export interface EventFormTemplateProps {
   data?: EventDetailResponse;
@@ -243,13 +242,19 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
               />
               <TextInputForm
                 label="시작 날짜: "
-                register={register('eventStartDate', { required: '시작날짜를 선택해 주세요', pattern: /^\d{4}-\d{2}-\d{2}$/ })}
+                register={register('eventStartDate', {
+                  required: '시작날짜를 선택해 주세요',
+                  pattern: /^\d{4}-\d{2}-\d{2}$/,
+                })}
                 type={'date'}
                 className={styles.eventInfoField}
               />
               <TextInputForm
                 label="종료 날짜: "
-                register={register('eventEndDate', { required: '종료날짜를 선택해 주세요', pattern: /^\d{4}-\d{2}-\d{2}$/ })}
+                register={register('eventEndDate', {
+                  required: '종료날짜를 선택해 주세요',
+                  pattern: /^\d{4}-\d{2}-\d{2}$/,
+                })}
                 type={'date'}
                 className={styles.eventInfoField}
               />
