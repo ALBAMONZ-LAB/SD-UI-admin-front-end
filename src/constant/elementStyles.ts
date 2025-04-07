@@ -63,6 +63,7 @@ export const DEFAULT_SECTION_STYLE: Partial<StyleConfig> = {
 
 export const DEFAULT_FIXED_SECTION_STYLE: Partial<StyleConfig> = {
   ...DEFAULT_SECTION_STYLE,
+  padding: '0 20px',
   position: 'fixed',
   bottom: '15px',
   zIndex: '1000',

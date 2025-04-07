@@ -48,7 +48,7 @@ export function EventFormSection({
         />
         {orderNo > -1 ? (
           <select
-            className={styles.selectBox}
+            className={styles.orderSelect}
             value={orderNo ?? 0}
             onChange={e => onOrderNoChange?.(Number(e.target.value))}
           >

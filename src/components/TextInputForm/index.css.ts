@@ -4,7 +4,6 @@ export const inputGroup = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '10px',
-  marginBottom: '16px',
   width: '100%',
 });
 

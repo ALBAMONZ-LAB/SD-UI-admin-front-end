@@ -35,7 +35,7 @@ export const addSectionButton = style({
   cursor: 'pointer',
 });
 
-export const addSectionSelect = style({
+export const addSelect = style({
   padding: '10px',
   borderRadius: '4px',
   border: '1px solid #ccc',

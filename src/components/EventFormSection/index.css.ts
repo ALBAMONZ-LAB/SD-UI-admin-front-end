@@ -11,13 +11,12 @@ export const inputFormWrapper = style({
   marginBottom: '12px',
 });
 
-export const selectBox = style({
+export const orderSelect = style({
   marginLeft: '6px',
   height: '36px',
   border: '1px solid #ccc',
   padding: '0 8px',
   borderRadius: '4px',
-  marginBottom: '16px',
   flexShrink: 0,
 });
 
@@ -29,5 +28,5 @@ export const deleteButton = style({
   background: 'transparent',
   border: 'none',
   cursor: 'pointer',
-  marginBottom: '24px',
+  marginBottom: '9px',
 });

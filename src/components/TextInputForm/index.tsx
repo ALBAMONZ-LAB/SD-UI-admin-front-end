@@ -4,14 +4,23 @@ import { InputHTMLAttributes, MouseEventHandler } from 'react';
 
 interface TextInputFormProps extends InputHTMLAttributes<HTMLElement> {
   label: string;
+  className?: string;
   register?: UseFormRegisterReturn;
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
   isArray?: boolean;
 }
 
-export function TextInputForm({ label, name, register, onButtonClick, isArray = false, ...rest }: TextInputFormProps) {
+export function TextInputForm({
+  label,
+  className,
+  name,
+  register,
+  onButtonClick,
+  isArray = false,
+  ...rest
+}: TextInputFormProps) {
   return (
-    <div className={styles.inputGroup}>
+    <div className={`${styles.inputGroup} ${className ? className : ''}`}>
       <div className={styles.inputTitle}>
         <label>{label}</label>
         {onButtonClick && (

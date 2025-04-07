@@ -12,4 +12,7 @@ export interface EventDetailResponse {
 export interface EventRequest {
   eventTitle: string;
   pageJson: string;
+  isPublished: boolean;
+  eventStartDate: string;
+  eventEndDate: string;
 }
