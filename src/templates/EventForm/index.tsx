@@ -388,7 +388,7 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
               )}
               <div className={styles.saveButtonContainer}>
                 <button type="submit" className={styles.addSectionButton}>
-                  이벤트 등록
+                  이벤트 {data ? '수정' : '등록'}
                 </button>
               </div>
             </div>
