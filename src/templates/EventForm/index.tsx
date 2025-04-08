@@ -260,7 +260,7 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
               />
               <TextInputForm
                 label="게재 여부: "
-                register={register('isPublished', { required: '게재 여부를 선택해 주세요' })}
+                register={register('isPublished')}
                 type={'checkbox'}
                 className={styles.eventInfoField}
               />
