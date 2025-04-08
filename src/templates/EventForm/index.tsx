@@ -41,6 +41,7 @@ export function EventFormTemplate({ data, ouMutate }: EventFormTemplateProps) {
     mode: 'onSubmit',
     defaultValues: {
       eventTitle: '',
+      eventRoute: '',
       pageJson: {
         header: '',
         body: [],

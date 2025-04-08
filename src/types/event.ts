@@ -54,6 +54,7 @@ export interface PageJson {
 export interface EventFormType {
   eventTitle: string;
   pageJson: PageJson;
+  eventRoute: string;
   isPublished: boolean;
   eventStartDate: string;
   eventEndDate: string;
